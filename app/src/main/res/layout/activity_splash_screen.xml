@@ -21,7 +21,7 @@
         app:layout_constraintVertical_bias="0.096" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/titleTV"
         android:layout_width="253dp"
         android:layout_height="63dp"
         android:fontFamily="@font/alfa_slab_one"
