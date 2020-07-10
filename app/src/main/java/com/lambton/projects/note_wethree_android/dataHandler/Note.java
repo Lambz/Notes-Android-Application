@@ -4,13 +4,16 @@ import android.media.Image;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.Fts4;
 import androidx.room.PrimaryKey;
 
 import java.sql.Date;
 
 @Fts4
-@Entity(tableName = "note_data")
+@Entity(tableName = "note_data", foreignKeys = @ForeignKey( entity = Category.class,
+                                                            parentColumns = "categoryName",
+                                                            childColumns = "noteCategory" ))
 public class Note {
 
 //    for full text searching
