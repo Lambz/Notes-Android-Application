@@ -1,8 +1,8 @@
 package com.lambton.projects.note_wethree_android.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.lambton.projects.note_wethree_android.R;
 
