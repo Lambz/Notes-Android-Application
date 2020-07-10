@@ -6,7 +6,7 @@ import androidx.room.Insert;
 
 @Dao
 public interface CategoryDataInterface {
-    
+
     @Insert
     void insertCategory(Category category);
     @Delete
