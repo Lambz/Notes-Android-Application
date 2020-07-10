@@ -2,21 +2,28 @@ package com.lambton.projects.note_wethree_android.dataHandler;
 
 import android.media.Image;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Fts4;
 import androidx.room.PrimaryKey;
 
 import java.sql.Date;
 
+@Fts4
 @Entity(tableName = "note_data")
 public class Note {
+
+//    for full text searching
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "rowid")
+    private int id;
 
     private String noteCategory;
     private String noteTitle;
     private String noteDescription;
-    @PrimaryKey()
     private Date noteCreatedDate;
     private String noteAudio;
-    private Image noteImage;
+    private String noteImage;
     private double noteLongitude;
     private double noteLatitude;
 
@@ -38,7 +45,7 @@ public class Note {
         this.noteAudio = noteAudio;
     }
 
-    public void setNoteImage(Image noteImage) {
+    public void setNoteImage(String noteImage) {
         this.noteImage = noteImage;
     }
 
@@ -80,7 +87,7 @@ public class Note {
         return noteAudio;
     }
 
-    public Image getNoteImage() {
+    public String getNoteImage() {
         return noteImage;
     }
 
