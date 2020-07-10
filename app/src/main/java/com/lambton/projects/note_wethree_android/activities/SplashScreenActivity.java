@@ -17,7 +17,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     //Variables
     Animation logoAnim, textAnim;
     ImageView image;
-    TextView title,slogan;
+    TextView title;
     private static int SPLASH_SCREEN = 5000;
 
     @Override
