@@ -20,7 +20,9 @@ public abstract class NoteDatabase extends RoomDatabase {
     }
 
     private static NoteDatabase createInstance(final Context context) {
-        return Room.databaseBuilder(context, NoteDatabase.class, NOTE_DB).build();
+        return Room.databaseBuilder(context, NoteDatabase.class, NOTE_DB)
+                .fallbackToDestructiveMigration()
+                .build();
     }
 
     public abstract NoteDataInterface getNoteDataInterface();

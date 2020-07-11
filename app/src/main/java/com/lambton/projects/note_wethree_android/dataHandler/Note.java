@@ -10,20 +10,15 @@ import androidx.room.PrimaryKey;
 
 import java.sql.Date;
 
-@Fts4
 @Entity(tableName = "note_data", foreignKeys = @ForeignKey( entity = Category.class,
                                                             parentColumns = "categoryName",
                                                             childColumns = "noteCategory" ))
 public class Note {
 
-//    for full text searching
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "rowid")
-    private int id;
-
     private String noteCategory;
     private String noteTitle;
     private String noteDescription;
+    @PrimaryKey
     private Date noteCreatedDate;
     private String noteAudio;
     private String noteImage;
