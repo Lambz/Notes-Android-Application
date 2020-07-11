@@ -6,16 +6,23 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import java.util.List;
+
 @Dao
 public interface NoteDataInterface {
 
     @Insert
-    void insert(Note note);
+    void insertNote(Note note);
     @Update
-    void update(Note note);
+    void updateNote(Note note);
     @Delete
-    void delete(Note note);
+    void deleteNote(Note note);
 
 
 //    mutliple move, fetch and deletion methods to be implemented
+
+    @Query("SELECT * FROM note_data WHERE noteCategory=:categoryName")
+    List<Note> fetchNotes(String categoryName);
+
+
 }
