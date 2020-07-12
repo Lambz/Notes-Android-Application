@@ -4,43 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".activities.NotesListActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="414dp"
-        android:layout_height="614dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
+       <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </androidx.recyclerview.widget.RecyclerView>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <ImageView
+        android:id="@+id/Note_Image"
+        android:layout_width="70dp"
+        android:layout_height="70dp">
+
+    </ImageView>
 
     <TextView
-        android:id="@+id/NotesListtextView"
-        android:layout_width="110dp"
-        android:layout_height="32dp"
-        android:fontFamily="sans-serif-black"
-        android:text="Note's List"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.045"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.4" />
+        android:id="@+id/note_list_title_tv"
+        android:layout_width="140dp"
+        android:layout_height="20dp"
+        tools:text="Note_title"
+        >
 
-    <Button
-        android:id="@+id/editBtn_notes_list"
-        android:layout_width="wrap_content"
+    </TextView>
+
+    <TextView
+        android:id="@+id/desc_note_list_tv"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Edit"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.919"
-        app:layout_constraintStart_toEndOf="@+id/NotesListtextView"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        tools:text="Description of Note">
+
+
+    </TextView>
+
+
+</LinearLayout>
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
