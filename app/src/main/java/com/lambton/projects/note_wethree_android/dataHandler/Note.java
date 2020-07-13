@@ -2,6 +2,7 @@ package com.lambton.projects.note_wethree_android.dataHandler;
 
 import android.media.Image;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -11,6 +12,7 @@ import androidx.room.PrimaryKey;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 @Entity(tableName = "note_data", foreignKeys = @ForeignKey( entity = Category.class,
                                                             parentColumns = "categoryName",
@@ -21,6 +23,7 @@ public class Note {
     private String noteTitle;
     private String noteDescription;
     @PrimaryKey
+    @NonNull
     private String noteCreatedDate;
     private String noteAudio;
     private String noteImage;
@@ -31,11 +34,18 @@ public class Note {
     public Note(String noteTitle, String noteDescription, String noteCategory) {
         this.noteTitle = noteTitle;
         this.noteDescription = noteDescription;
-        this.noteCreatedDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        this.noteCreatedDate = simpleDateFormat.format(calendar.getTime());
         this.noteCategory = noteCategory;
     }
 
 //    setters
+
+    public void setNoteCreatedDate(String noteCreatedDate) {
+        this.noteCreatedDate = noteCreatedDate;
+    }
 
     public void setNoteCategory(String noteCategory) {
         this.noteCategory = noteCategory;
