@@ -9,6 +9,8 @@ import androidx.room.Fts4;
 import androidx.room.PrimaryKey;
 
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 @Entity(tableName = "note_data", foreignKeys = @ForeignKey( entity = Category.class,
                                                             parentColumns = "categoryName",
@@ -19,17 +21,17 @@ public class Note {
     private String noteTitle;
     private String noteDescription;
     @PrimaryKey
-    private Date noteCreatedDate;
+    private String noteCreatedDate;
     private String noteAudio;
     private String noteImage;
     private double noteLongitude;
     private double noteLatitude;
 
 //    constructors
-    public Note(String noteTitle, String noteDescription, Date noteCreatedDate, String noteCategory) {
+    public Note(String noteTitle, String noteDescription, String noteCategory) {
         this.noteTitle = noteTitle;
         this.noteDescription = noteDescription;
-        this.noteCreatedDate = noteCreatedDate;
+        this.noteCreatedDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
         this.noteCategory = noteCategory;
     }
 
@@ -77,8 +79,13 @@ public class Note {
         return noteDescription;
     }
 
-    public Date getNoteCreatedDate() {
+    public String getNoteCreatedDate() {
         return noteCreatedDate;
+    }
+
+    public Date getNoteCreatedDateInDateFormat() throws ParseException {
+        Date date = (Date) new SimpleDateFormat("dd/MM/yyyy").parse(noteCreatedDate);
+        return date;
     }
 
     public String getNoteAudio() {
