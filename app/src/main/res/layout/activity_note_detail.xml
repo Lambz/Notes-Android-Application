@@ -6,4 +6,34 @@
     android:layout_height="match_parent"
     tools:context=".activities.NoteDetailActivity">
 
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="8dp"
+        android:text="Note's Detail"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/notes_detail_title"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="130dp"
+        tools:layout_editor_absoluteY="53dp">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/notes_detail_desc"
+        android:layout_width="400dp"
+        android:layout_height="100dp"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="99dp"
+        tools:ignore="MissingConstraints" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

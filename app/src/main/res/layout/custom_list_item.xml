@@ -19,7 +19,7 @@
         app:srcCompat="@mipmap/folder" />
 
     <TextView
-        android:id="@+id/title_textview"
+        android:id="@+id/note_title_textview"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"

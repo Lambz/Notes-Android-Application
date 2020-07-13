@@ -55,7 +55,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
 
         public ViewHolder(View itemView) {
             super(itemView);
-            mTitleTextView = itemView.findViewById(R.id.title_textview);
+            mTitleTextView = itemView.findViewById(R.id.note_title_textview);
             mNumNotesTextView = itemView.findViewById(R.id.num_notes_textview);
             mConstraintLayout = itemView.findViewById(R.id.item_contraint_layout);
         }

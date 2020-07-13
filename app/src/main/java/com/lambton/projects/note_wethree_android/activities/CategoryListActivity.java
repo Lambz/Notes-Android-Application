@@ -29,7 +29,7 @@ public class CategoryListActivity extends AppCompatActivity {
     {
         // Set ListView Object
         folderImage = findViewById(R.id.folder_imageview);
-        categoryTitle = findViewById(R.id.title_textview);
+        categoryTitle = findViewById(R.id.note_title_textview);
         notesNumber = findViewById(R.id.num_notes_textview);
 
     }
