@@ -35,5 +35,7 @@ public interface NoteDataInterface {
     @Transaction
     @Query("SELECT * FROM note_data WHERE noteDescription LIKE:searchString AND noteCategoryId=:categoryId")
     List<Note> getSearchResults(String searchString, int categoryId);
-
+    @Transaction
+    @Query("SELECT * FROM note_data WHERE noteCategoryId=:categoryId ORDER BY noteCreatedDate DESC")
+    List<Note> getSortedNotesByDate(int categoryId);
 }

@@ -17,7 +17,6 @@ import java.util.concurrent.ExecutionException;
 
 public class NoteHelperRepository {
     private NoteDataInterface noteDataInterface;
-    public String string;
 
     public NoteHelperRepository(Application application) {
         NoteDatabase noteDatabase = NoteDatabase.getInstance(application);
@@ -78,9 +77,9 @@ public class NoteHelperRepository {
     public List<Note> searchNotesByKeyword(String searchString, int categoryId) {
         List<Note> noteList = null;
         if(searchString != null) {
-            string = "%" + searchString + "%";
+            String string = "%" + searchString + "%";
             Dictionary<String, Integer> sendQuery = new Hashtable();
-            sendQuery.put(searchString, categoryId);
+            sendQuery.put(string, categoryId);
             try {
                 noteList = new NoteHelperRepository.SearchNotes(noteDataInterface).execute(sendQuery).get();
             } catch (ExecutionException e) {
@@ -91,6 +90,19 @@ public class NoteHelperRepository {
         }
         return noteList;
     }
+
+    public List<Note> fetchSortedNotesByDate(int categoryId) {
+        List<Note> noteList = null;
+        try {
+            noteList =  new SortNotesByDate(noteDataInterface).execute(categoryId).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return noteList;
+    }
+
 
     //    async classes for operations
 
@@ -137,6 +149,21 @@ public class NoteHelperRepository {
         @Override
         protected List<Note> doInBackground(Integer... integers) {
             List<Note> noteList = noteDataInterface.getAllNotesForCategory(integers[0].intValue());
+            return noteList;
+        }
+    }
+
+    private static class SortNotesByDate extends AsyncTask<Integer, Void, List<Note>> {
+
+        private NoteDataInterface noteDataInterface;
+
+        private SortNotesByDate(NoteDataInterface noteDataInterface) {
+            this.noteDataInterface = noteDataInterface;
+        }
+
+        @Override
+        protected List<Note> doInBackground(Integer... integers) {
+            List<Note> noteList = noteDataInterface.getSortedNotesByDate(integers[0].intValue());
             return noteList;
         }
     }
