@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.NoteDetailActivity">
+    tools:context=".activities.NoteDetailActivity"
+    android:padding="20dp">
 
     <TextView
         android:layout_width="100dp"
@@ -34,5 +35,15 @@
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="99dp"
          />
+
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@mipmap/folder"
+        android:backgroundTint="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
