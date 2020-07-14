@@ -62,6 +62,19 @@ public class NoteHelperRepository {
         return noteList;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void moveNotesToCategory(List<Note> noteList, int categoryId) {
+        if(noteList == null) {
+            new NullPointerException();
+        }
+        else {
+            for(Note note: noteList) {
+                note.setNoteCategoryId(categoryId);
+                new NoteHelperRepository.UpdateNote(noteDataInterface).execute(note);
+            }
+        }
+    }
+
     public LiveData<List<Note>> getNoteList() {
         return noteList;
     }
