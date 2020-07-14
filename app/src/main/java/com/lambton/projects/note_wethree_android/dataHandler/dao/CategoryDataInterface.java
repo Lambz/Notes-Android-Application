@@ -25,12 +25,7 @@ public interface CategoryDataInterface {
     @Query("SELECT * FROM CATEGORY_DATA WHERE id=:categoryId")
     LiveData<Category> getCategory(int categoryId);
 
-//    for Note
-    @Transaction
-    @Insert(onConflict = OnConflictStrategy.ABORT)
-    void insertNote(Note note);
-
-//    pojo query to fetch data
+    //    pojo query to fetch data
     @Transaction
     @Query("SELECT * FROM category_data")
     LiveData<List<Category>> loadAllCategories();

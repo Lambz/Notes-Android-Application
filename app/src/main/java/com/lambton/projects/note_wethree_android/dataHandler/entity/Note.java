@@ -2,10 +2,8 @@ package com.lambton.projects.note_wethree_android.dataHandler.entity;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -13,17 +11,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(tableName = "note_data")
 public class Note implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
     @NonNull
-    @ForeignKey(entity = Category.class,
-            parentColumns = "id",
-            childColumns = "noteCategoryId",
-            onDelete = CASCADE)
     private int noteCategoryId;
     @NonNull
     private String noteTitle;
@@ -36,9 +29,6 @@ public class Note implements Serializable {
     private double noteLatitude;
 
 //    constructors
-//    for serialization
-    public Note() {
-    }
 
     public Note(String noteTitle, String noteDescription, int noteCategoryId) {
         this.noteTitle = noteTitle;

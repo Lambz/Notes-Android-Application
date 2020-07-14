@@ -14,11 +14,11 @@ import com.lambton.projects.note_wethree_android.dataHandler.entity.Note;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class NoteRepository {
+public class CategoryHelperRepository {
 
     private CategoryDataInterface categoryDataInterface;
     private LiveData<List<Category>> categoryList;
-    public NoteRepository(Application application) {
+    public CategoryHelperRepository(Application application) {
         NoteDatabase noteDatabase = NoteDatabase.getInstance(application);
         categoryDataInterface = noteDatabase.categoryDataInterface();
         categoryList = categoryDataInterface.loadAllCategories();
@@ -42,7 +42,8 @@ public class NoteRepository {
         return categoryList;
     }
 
-//    async methods for operations
+//    async classes for operations
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     private static class InsertCategory extends AsyncTask<Category, Void, Void> {
 
@@ -73,18 +74,6 @@ public class NoteRepository {
             return null;
         }
     }
-
-
-//    note operations
-    public void insertNoteForCategoryInDatabase(Note note, int categoryId) {
-        if(note == null) {
-            new NullPointerException();
-        }
-        else {
-            categoryDataInterface.insertNote(note);
-        }
-    }
-
 
 
 }

@@ -7,6 +7,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.lambton.projects.note_wethree_android.dataHandler.dao.CategoryDataInterface;
+import com.lambton.projects.note_wethree_android.dataHandler.dao.NoteDataInterface;
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Note;
 
@@ -16,6 +17,7 @@ public abstract class NoteDatabase extends RoomDatabase {
     private static final String NOTE_DB = "noteDatabase.db";
     public static volatile NoteDatabase instance;
     public abstract CategoryDataInterface categoryDataInterface();
+    public abstract NoteDataInterface noteDataInterface();
 
     static synchronized NoteDatabase getInstance(Context context) {
         if(instance == null) {

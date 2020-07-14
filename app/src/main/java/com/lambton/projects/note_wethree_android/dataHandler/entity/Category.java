@@ -15,9 +15,7 @@ public class Category implements Serializable {
     @NonNull
     private String categoryName;
 //    constructor
-//    constructor for serialization
-    public Category() {
-    }
+
     public Category(String categoryName) {
         this.categoryName = categoryName;
     }
