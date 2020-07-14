@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -20,14 +19,14 @@ import com.lambton.projects.note_wethree_android.dataHandler.Category;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolder>
+public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>
 {
 
     private static final String TAG = "CategoriesAdapter";
     private Context mContext;
     private List<Category> mCategoryList;
 
-    public CategoriesAdapter(Context context)
+    public NotesAdapter(Context context)
     {
         this.mContext = context;
         mCategoryList = new ArrayList<>();

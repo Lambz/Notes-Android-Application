@@ -1,22 +1,22 @@
 package com.lambton.projects.note_wethree_android.activities;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lambton.projects.note_wethree_android.R;
+import com.lambton.projects.note_wethree_android.adapters.CategoriesAdapter;
 
 public class CategoryListActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     //Category list variables
-    ListView listView;
-    ImageView folderImage;
-    TextView categoryTitle, notesNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,17 +28,14 @@ public class CategoryListActivity extends AppCompatActivity {
     private void setMemberVariables()
     {
         // Set ListView Object
-        folderImage = findViewById(R.id.folder_imageview);
-        categoryTitle = findViewById(R.id.note_title_textview);
-        notesNumber = findViewById(R.id.num_notes_textview);
-
+        mRecyclerView = findViewById(R.id.recycler_view);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         getCategories();
-        setListViewData();
+        setRecyclerViewData();
     }
 
     private void getCategories()
@@ -46,9 +43,16 @@ public class CategoryListActivity extends AppCompatActivity {
         // Get Categories
     }
 
-    private void setListViewData()
+    private void setRecyclerViewData()
     {
+        CategoriesAdapter categoriesAdapter = new CategoriesAdapter(this);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(categoriesAdapter);
+    }
 
+    public void addCategoryClicked(View view)
+    {
     }
 
 //    @Override

@@ -13,13 +13,14 @@
         <activity android:name=".activities.NoteDetailActivity" />
         <activity android:name=".activities.NotesListActivity" />
         <activity android:name=".activities.SplashScreenActivity">
+        </activity>
+        <activity android:name=".activities.CategoryListActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.CategoryListActivity" />
 
 
 

@@ -9,12 +9,13 @@ import android.widget.ListView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.lambton.projects.note_wethree_android.R;
 
-public class NotesListActivity extends AppCompatActivity implements ListView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class NotesListActivity extends AppCompatActivity{
 
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
     private int mPosition;
     private boolean mIsEditing = false;
     private final int MOVE_TO_REQUEST_CODE = 1;
@@ -29,8 +30,7 @@ public class NotesListActivity extends AppCompatActivity implements ListView.OnI
     private void setMemberVariables()
     {
         // Set ListView Object
-        mListView.setOnItemClickListener(this);
-        mListView.setOnItemLongClickListener(this);
+        mRecyclerView = findViewById(R.id.recycler_view);
     }
 
     @Override
@@ -48,18 +48,6 @@ public class NotesListActivity extends AppCompatActivity implements ListView.OnI
     private void setListViewData()
     {
 
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(NotesListActivity.this, NoteDetailActivity.class);
-        intent.putExtra("position",(Integer) position);
-        startActivity(intent);
-    }
-
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        return false;
     }
 
     public void moveToClicked(View view)

@@ -8,6 +8,7 @@
     android:padding="20dp">
 
     <TextView
+        android:id="@+id/title"
         android:layout_width="100dp"
         android:layout_height="20dp"
         android:layout_marginTop="8dp"
@@ -19,24 +20,29 @@
 
     </TextView>
 
-    <TextView
+    <EditText
         android:id="@+id/notes_detail_title"
-        android:layout_width="150dp"
-        android:layout_height="30dp"
-        tools:layout_editor_absoluteX="130dp"
-        tools:layout_editor_absoluteY="53dp">
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textSize="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
 
-    </TextView>
+        app:layout_constraintTop_toBottomOf="@id/title"/>
 
-    <TextView
+
+    <EditText
         android:id="@+id/notes_detail_desc"
-        android:layout_width="400dp"
-        android:layout_height="100dp"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="99dp"
-         />
+        android:layout_width="match_parent"
+        android:layout_height="99dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/notes_detail_title"
+        android:layout_marginTop="20dp"/>
 
     <Button
+        android:id="@+id/foler_btn"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:background="@mipmap/folder"
@@ -44,6 +50,34 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"/>
 
+    <Button
+        android:id="@+id/delete_btn"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="80dp"
+        android:background="@mipmap/delete_icon"
+        android:backgroundTint="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/foler_btn" />
+
+    <Button
+        android:id="@+id/camera_btn"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="80dp"
+        android:background="@mipmap/camera_icon"
+        android:backgroundTint="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/delete_btn" />
+
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="80dp"
+        android:background="@mipmap/edit_icon"
+        android:backgroundTint="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/camera_btn" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
