@@ -20,21 +20,21 @@
 
     </TextView>
 
-    <TextView
+    <EditText
         android:id="@+id/notes_detail_title"
         android:layout_width="0dp"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:textSize="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
 
-        app:layout_constraintTop_toBottomOf="@id/title">
+        app:layout_constraintTop_toBottomOf="@id/title"/>
 
-    </TextView>
 
-    <TextView
+    <EditText
         android:id="@+id/notes_detail_desc"
-        android:layout_width="361dp"
+        android:layout_width="match_parent"
         android:layout_height="99dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
