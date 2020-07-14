@@ -11,7 +11,7 @@ import com.lambton.projects.note_wethree_android.dataHandler.dao.NoteDataInterfa
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Note;
 
-@Database(entities = {Category.class, Note.class}, version = 1)
+@Database(entities = {Category.class, Note.class}, version = 1, exportSchema = false)
 public abstract class NoteDatabase extends RoomDatabase {
 
     private static final String NOTE_DB = "noteDatabase.db";
