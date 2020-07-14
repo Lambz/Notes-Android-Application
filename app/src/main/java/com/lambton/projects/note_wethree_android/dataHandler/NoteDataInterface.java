@@ -6,6 +6,8 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.lambton.projects.note_wethree_android.dataHandler.entity.Note;
+
 import java.util.List;
 
 @Dao
@@ -21,8 +23,8 @@ public interface NoteDataInterface {
 
 //    mutliple move, fetch and deletion methods to be implemented
 
-    @Query("SELECT * FROM note_data WHERE noteCategory=:categoryName")
-    List<Note> fetchNotes(String categoryName);
+//    @Query("SELECT * FROM note_data WHERE noteCategoryId=:id")
+//    List<Note> fetchNotes(int categoryNameId);
 
 
 }

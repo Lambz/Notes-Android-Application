@@ -1,4 +1,4 @@
-package com.lambton.projects.note_wethree_android.dataHandler;
+package com.lambton.projects.note_wethree_android.dataHandler.entity;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
