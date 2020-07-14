@@ -1,4 +1,4 @@
-package com.lambton.projects.note_wethree_android.dataHandler;
+package com.lambton.projects.note_wethree_android.dataHandler.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -20,7 +20,7 @@ public interface CategoryDataInterface {
     void insertCategory(Category category);
     @Transaction
     @Delete
-    void deleteCategory(int categoryId);
+    void deleteCategory(Category category);
     @Transaction
     @Query("SELECT * FROM CATEGORY_DATA WHERE id=:categoryId")
     LiveData<Category> getCategory(int categoryId);
@@ -28,10 +28,11 @@ public interface CategoryDataInterface {
 //    for Note
     @Transaction
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    void insertNote(Note note, int categoryId);
+    void insertNote(Note note);
 
 //    pojo query to fetch data
     @Transaction
     @Query("SELECT * FROM category_data")
     LiveData<List<Category>> loadAllCategories();
+
 }

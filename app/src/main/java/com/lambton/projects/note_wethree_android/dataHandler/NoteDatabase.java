@@ -6,6 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.lambton.projects.note_wethree_android.dataHandler.dao.CategoryDataInterface;
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Note;
 

@@ -1,7 +1,6 @@
 package com.lambton.projects.note_wethree_android.dataHandler;
 
-import android.app.Application;
-
+import com.lambton.projects.note_wethree_android.dataHandler.dao.CategoryDataInterface;
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Note;
 
@@ -22,8 +21,8 @@ public class NoteRepository {
         }
     }
 
-    public void delteCategoryFromDatabase(int categoryId) {
-        categoryDataInterface.deleteCategory(categoryId);
+    public void delteCategoryFromDatabase(Category category) {
+        categoryDataInterface.deleteCategory(category);
     }
 
 
@@ -33,7 +32,7 @@ public class NoteRepository {
             new NullPointerException();
         }
         else {
-            categoryDataInterface.insertNote(note, categoryId);
+            categoryDataInterface.insertNote(note);
         }
     }
 
