@@ -1,5 +1,7 @@
 package com.lambton.projects.note_wethree_android.dataHandler.entity;
 
+import android.graphics.Bitmap;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -7,10 +9,8 @@ import androidx.room.PrimaryKey;
 
 
 import java.io.Serializable;
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 
 @Entity(tableName = "note_data")
@@ -23,10 +23,10 @@ public class Note implements Serializable {
     private String noteTitle;
     private String noteDescription;
     @NonNull
-    private String noteCreatedDate;
+    private java.util.Date noteCreatedDate;
     private String noteAudio;
     @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
-    private Byte[] noteImage;
+    private byte[] noteImage;
     private double noteLongitude;
     private double noteLatitude;
 
@@ -37,8 +37,7 @@ public class Note implements Serializable {
         this.noteDescription = noteDescription;
 
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        this.noteCreatedDate = simpleDateFormat.format(calendar.getTime());
+        this.noteCreatedDate = calendar.getTime();
         this.noteCategoryId = noteCategoryId;
     }
 
@@ -48,7 +47,7 @@ public class Note implements Serializable {
         this.id = id;
     }
 
-    public void setNoteCreatedDate(String noteCreatedDate) {
+    public void setNoteCreatedDate(@NonNull Date noteCreatedDate) {
         this.noteCreatedDate = noteCreatedDate;
     }
 
@@ -60,7 +59,7 @@ public class Note implements Serializable {
         this.noteAudio = noteAudio;
     }
 
-    public void setNoteImage(Byte[] noteImage) {
+    public void setNoteImage(byte[] noteImage) {
         this.noteImage = noteImage;
     }
 
@@ -98,20 +97,15 @@ public class Note implements Serializable {
         return noteDescription;
     }
 
-    public String getNoteCreatedDate() {
+    public java.util.Date getNoteCreatedDate() {
         return noteCreatedDate;
-    }
-
-    public Date getNoteCreatedDateInDateFormat() throws ParseException {
-        Date date = (Date) new SimpleDateFormat("dd/MM/yyyy").parse(noteCreatedDate);
-        return date;
     }
 
     public String getNoteAudio() {
         return noteAudio;
     }
 
-    public Byte[] getNoteImage() {
+    public byte[] getNoteImage() {
         return noteImage;
     }
 
@@ -121,5 +115,17 @@ public class Note implements Serializable {
 
     public double getNoteLatitude() {
         return noteLatitude;
+    }
+
+//    custom getters and setters for image datatypes
+
+//    custom getters
+
+    public Bitmap getNoteImageAsBitmap() {
+        return ConvertDatatypes.convertByteArrayToBitmap(getNoteImage());
+    }
+
+    public void setNoteImageAsBitmap(Bitmap bitmap) {
+        setNoteImage(ConvertDatatypes.convertBitmapToByteArray(bitmap));
     }
 }
