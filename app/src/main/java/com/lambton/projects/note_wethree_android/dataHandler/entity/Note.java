@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,7 +16,7 @@ import java.util.Calendar;
 import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(tableName = "note_data")
-public class Note {
+public class Note implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
     @NonNull
