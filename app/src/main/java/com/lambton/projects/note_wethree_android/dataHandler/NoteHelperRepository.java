@@ -10,11 +10,14 @@ import androidx.annotation.RequiresApi;
 import com.lambton.projects.note_wethree_android.dataHandler.dao.NoteDataInterface;
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Note;
 
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class NoteHelperRepository {
     private NoteDataInterface noteDataInterface;
+    public String string;
 
     public NoteHelperRepository(Application application) {
         NoteDatabase noteDatabase = NoteDatabase.getInstance(application);
@@ -72,6 +75,23 @@ public class NoteHelperRepository {
         }
     }
 
+    public List<Note> searchNotesByKeyword(String searchString, int categoryId) {
+        List<Note> noteList = null;
+        if(searchString != null) {
+            string = "%" + searchString + "%";
+            Dictionary<String, Integer> sendQuery = new Hashtable();
+            sendQuery.put(searchString, categoryId);
+            try {
+                noteList = new NoteHelperRepository.SearchNotes(noteDataInterface).execute(sendQuery).get();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        return noteList;
+    }
+
     //    async classes for operations
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -118,6 +138,22 @@ public class NoteHelperRepository {
         protected List<Note> doInBackground(Integer... integers) {
             List<Note> noteList = noteDataInterface.getAllNotesForCategory(integers[0].intValue());
             return noteList;
+        }
+    }
+
+    private static class SearchNotes extends AsyncTask<Dictionary<String, Integer>, Void, List<Note>> {
+
+        private NoteDataInterface noteDataInterface;
+
+        private SearchNotes(NoteDataInterface noteDataInterface) {
+            this.noteDataInterface = noteDataInterface;
+        }
+
+        @Override
+        protected List<Note> doInBackground(Dictionary<String, Integer>... dictionaries) {
+            String queryString = dictionaries[0].keys().nextElement();
+            int categoryId = dictionaries[0].get(queryString);
+            return noteDataInterface.getSearchResults(queryString, categoryId);
         }
     }
 

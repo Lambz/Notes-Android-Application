@@ -33,7 +33,7 @@ public interface NoteDataInterface {
     @Query("SELECT * FROM note_data")
     List<Note> getAllNotes();
     @Transaction
-    @Query("SELECT * FROM note_data WHERE noteDescription LIKE:searchString")
-    List<Note> getSearchResults(String searchString);
+    @Query("SELECT * FROM note_data WHERE noteDescription LIKE:searchString AND noteCategoryId=:categoryId")
+    List<Note> getSearchResults(String searchString, int categoryId);
 
 }
