@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
-import androidx.lifecycle.LiveData;
 
 
 import com.lambton.projects.note_wethree_android.dataHandler.dao.NoteDataInterface;
@@ -16,12 +15,10 @@ import java.util.concurrent.ExecutionException;
 
 public class NoteHelperRepository {
     private NoteDataInterface noteDataInterface;
-    private LiveData<List<Note>> noteList;
 
     public NoteHelperRepository(Application application) {
         NoteDatabase noteDatabase = NoteDatabase.getInstance(application);
         noteDataInterface = noteDatabase.noteDataInterface();
-        noteList = noteDataInterface.getAllNotes();
     }
 
 
@@ -75,10 +72,6 @@ public class NoteHelperRepository {
         }
     }
 
-    public LiveData<List<Note>> getNoteList() {
-        return noteList;
-    }
-
     //    async classes for operations
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -123,8 +116,8 @@ public class NoteHelperRepository {
 
         @Override
         protected List<Note> doInBackground(Integer... integers) {
-            LiveData<List<Note>> noteList = noteDataInterface.getAllNotesForCategory(integers[0].intValue());
-            return (List<Note>) noteList;
+            List<Note> noteList = noteDataInterface.getAllNotesForCategory(integers[0].intValue());
+            return noteList;
         }
     }
 
