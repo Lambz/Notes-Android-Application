@@ -1,6 +1,5 @@
 package com.lambton.projects.note_wethree_android.dataHandler.dao;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -9,7 +8,6 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
-import com.lambton.projects.note_wethree_android.dataHandler.entity.Note;
 
 import java.util.List;
 
@@ -23,11 +21,9 @@ public interface CategoryDataInterface {
     void deleteCategory(Category category);
     @Transaction
     @Query("SELECT * FROM CATEGORY_DATA WHERE id=:categoryId")
-    LiveData<Category> getCategory(int categoryId);
-
-    //    pojo query to fetch data
+    Category getCategory(int categoryId);
     @Transaction
     @Query("SELECT * FROM category_data")
-    LiveData<List<Category>> loadAllCategories();
+    List<Category> loadAllCategories();
 
 }

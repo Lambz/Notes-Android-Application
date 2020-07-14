@@ -24,7 +24,7 @@ public class Note implements Serializable {
     @NonNull
     private String noteCreatedDate;
     private String noteAudio;
-    private String noteImage;
+    private Byte[] noteImage;
     private double noteLongitude;
     private double noteLatitude;
 
@@ -58,7 +58,7 @@ public class Note implements Serializable {
         this.noteAudio = noteAudio;
     }
 
-    public void setNoteImage(String noteImage) {
+    public void setNoteImage(Byte[] noteImage) {
         this.noteImage = noteImage;
     }
 
@@ -109,7 +109,7 @@ public class Note implements Serializable {
         return noteAudio;
     }
 
-    public String getNoteImage() {
+    public Byte[] getNoteImage() {
         return noteImage;
     }
 

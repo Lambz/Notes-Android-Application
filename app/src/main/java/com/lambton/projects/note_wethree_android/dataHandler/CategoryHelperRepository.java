@@ -5,23 +5,20 @@ import android.os.AsyncTask;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
-import androidx.lifecycle.LiveData;
 
 import com.lambton.projects.note_wethree_android.dataHandler.dao.CategoryDataInterface;
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
-import com.lambton.projects.note_wethree_android.dataHandler.entity.Note;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class CategoryHelperRepository {
 
     private CategoryDataInterface categoryDataInterface;
-    private LiveData<List<Category>> categoryList;
     public CategoryHelperRepository(Application application) {
         NoteDatabase noteDatabase = NoteDatabase.getInstance(application);
         categoryDataInterface = noteDatabase.categoryDataInterface();
-        categoryList = categoryDataInterface.loadAllCategories();
+
     }
 //    category operations
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -30,16 +27,25 @@ public class CategoryHelperRepository {
             new NullPointerException();
         }
         else {
-            new InsertCategory(categoryDataInterface).execute(category);
+            new CategoryHelperRepository.InsertCategory(categoryDataInterface).execute(category);
         }
     }
 
-    public void delteCategoryFromDatabase(Category category) {
-        new DeleteCategory(categoryDataInterface).execute(category);
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public List<Category> getAllCategories() {
+        List<Category> categoryList = null;
+        try {
+            categoryList = new CategoryHelperRepository.FetchAllCategories(categoryDataInterface).execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return categoryList;
     }
 
-    public LiveData<List<Category>> getCategoryList() {
-        return categoryList;
+    public void delteCategoryFromDatabase(Category category) {
+        new CategoryHelperRepository.DeleteCategory(categoryDataInterface).execute(category);
     }
 
 //    async classes for operations
@@ -57,6 +63,21 @@ public class CategoryHelperRepository {
         protected Void doInBackground(Category... categories) {
             categoryDataInterface.insertCategory(categories[0]);
             return null;
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private static class FetchAllCategories extends AsyncTask<Void, Void, List<Category>> {
+
+        private CategoryDataInterface categoryDataInterface;
+
+        private FetchAllCategories(CategoryDataInterface categoryDataInterface) {
+            this.categoryDataInterface = categoryDataInterface;
+        }
+
+        @Override
+        protected List<Category> doInBackground(Void... voids) {
+            return categoryDataInterface.loadAllCategories();
         }
     }
 
