@@ -20,7 +20,7 @@ public interface CategoryDataInterface {
     void insertCategory(Category category);
     @Transaction
     @Delete
-    void deleteCategory(Category category);
+    void deleteCategory(int categoryId);
     @Transaction
     @Query("SELECT * FROM CATEGORY_DATA WHERE id=:categoryId")
     LiveData<Category> getCategory(int categoryId);
@@ -28,7 +28,7 @@ public interface CategoryDataInterface {
 //    for Note
     @Transaction
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    void insertNote(Note note);
+    void insertNote(Note note, int categoryId);
 
 //    pojo query to fetch data
     @Transaction
