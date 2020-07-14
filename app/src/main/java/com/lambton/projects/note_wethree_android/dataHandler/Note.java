@@ -14,15 +14,21 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-@Entity(tableName = "note_data", foreignKeys = @ForeignKey( entity = Category.class,
-                                                            parentColumns = "categoryName",
-                                                            childColumns = "noteCategory" ))
-public class Note {
+import static androidx.room.ForeignKey.CASCADE;
 
+@Entity(tableName = "note_data")
+public class Note {
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+    @NonNull
+    @ForeignKey(entity = Category.class,
+            parentColumns = "categoryName",
+            childColumns = "noteCategory",
+            onDelete = CASCADE)
     private String noteCategory;
+    @NonNull
     private String noteTitle;
     private String noteDescription;
-    @PrimaryKey
     @NonNull
     private String noteCreatedDate;
     private String noteAudio;
@@ -31,6 +37,10 @@ public class Note {
     private double noteLatitude;
 
 //    constructors
+//    for serialization
+    public Note() {
+    }
+
     public Note(String noteTitle, String noteDescription, String noteCategory) {
         this.noteTitle = noteTitle;
         this.noteDescription = noteDescription;
@@ -42,6 +52,10 @@ public class Note {
     }
 
 //    setters
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public void setNoteCreatedDate(String noteCreatedDate) {
         this.noteCreatedDate = noteCreatedDate;
@@ -76,6 +90,10 @@ public class Note {
     }
 
     //    getters
+
+    public int getId() {
+        return id;
+    }
 
     public String getNoteCategory() {
         return noteCategory;
