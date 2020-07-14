@@ -2,7 +2,6 @@ package com.lambton.projects.note_wethree_android.activities;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -23,7 +22,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.lambton.projects.note_wethree_android.R;
 import com.lambton.projects.note_wethree_android.Utils;
 import com.lambton.projects.note_wethree_android.adapters.CategoriesAdapter;
-import com.lambton.projects.note_wethree_android.dataHandler.Category;
+import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 

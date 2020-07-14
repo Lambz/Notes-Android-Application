@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.lambton.projects.note_wethree_android.R;
 import com.lambton.projects.note_wethree_android.activities.NotesListActivity;
-import com.lambton.projects.note_wethree_android.dataHandler.Category;
+import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
 
 import java.util.ArrayList;
 import java.util.List;

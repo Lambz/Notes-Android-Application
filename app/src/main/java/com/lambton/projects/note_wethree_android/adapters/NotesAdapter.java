@@ -17,8 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.lambton.projects.note_wethree_android.R;
 import com.lambton.projects.note_wethree_android.activities.NotesListActivity;
-import com.lambton.projects.note_wethree_android.dataHandler.Category;
-import com.lambton.projects.note_wethree_android.dataHandler.Note;
+import com.lambton.projects.note_wethree_android.dataHandler.entity.Note;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,8 +34,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>
     {
         this.mContext = context;
         mNoteList = new ArrayList<>();
-        mNoteList.add(new Note("Note 1","Desc 1","Hello"));
-        mNoteList.add(new Note("Note 2","Desc 2","Hello"));
+        mNoteList.add(new Note("Note 1","Desc 1",1));
+        mNoteList.add(new Note("Note 2","Desc 2",1));
     }
 
     @NonNull

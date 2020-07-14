@@ -22,8 +22,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.lambton.projects.note_wethree_android.R;
 import com.lambton.projects.note_wethree_android.adapters.CategoriesAdapter;
 import com.lambton.projects.note_wethree_android.adapters.NotesAdapter;
-import com.lambton.projects.note_wethree_android.dataHandler.Category;
-import com.lambton.projects.note_wethree_android.dataHandler.Note;
+import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
+import com.lambton.projects.note_wethree_android.dataHandler.entity.Note;
 
 import java.util.ArrayList;
 import java.util.List;
