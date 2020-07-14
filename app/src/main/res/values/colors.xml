@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#DBBC5F</color>
     <color name="colorAccent">#DBBC5F</color>
     <color name="lightgrey">#eeeeee</color>
+    <color name="red">#FF0000</color>>
+    <color name="green">#009600</color>>
 </resources>

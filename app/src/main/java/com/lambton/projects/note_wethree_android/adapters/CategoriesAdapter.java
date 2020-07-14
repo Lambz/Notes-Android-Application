@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -66,6 +65,20 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         return mCategoryList.size();
     }
 
+    public Category deleteItem(int position)
+    {
+        Category category = mCategoryList.remove(position);
+        notifyItemRemoved(position);
+        return category;
+    }
+
+    public void addCategory(Category category, int position)
+    {
+        mCategoryList.add(position,category);
+        notifyItemInserted(position);
+    }
+
+
     public class ViewHolder extends RecyclerView.ViewHolder
     {
         public TextView mTitleTextView;
@@ -80,4 +93,5 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
             mConstraintLayout = itemView.findViewById(R.id.item_contraint_layout);
         }
     }
+
 }
