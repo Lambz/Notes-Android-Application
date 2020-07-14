@@ -12,6 +12,7 @@ import com.lambton.projects.note_wethree_android.dataHandler.dao.NoteDataInterfa
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Note;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class NoteHelperRepository {
     private NoteDataInterface noteDataInterface;
@@ -49,6 +50,18 @@ public class NoteHelperRepository {
         new NoteHelperRepository.DeleteNote(noteDataInterface).execute(note);
     }
 
+    public List<Note> getNotesForCategory(int categoryId) {
+        List<Note> noteList = null;
+        try {
+            noteList = new FetchNotes(noteDataInterface).execute(categoryId).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return noteList;
+    }
+
     public LiveData<List<Note>> getNoteList() {
         return noteList;
     }
@@ -84,6 +97,21 @@ public class NoteHelperRepository {
         protected Void doInBackground(Note... notes) {
             noteDataInterface.updateNote(notes[0]);
             return null;
+        }
+    }
+
+    private static class FetchNotes extends AsyncTask<Integer, Void, List<Note>> {
+
+        private NoteDataInterface noteDataInterface;
+
+        private FetchNotes(NoteDataInterface noteDataInterface) {
+            this.noteDataInterface = noteDataInterface;
+        }
+
+        @Override
+        protected List<Note> doInBackground(Integer... integers) {
+            LiveData<List<Note>> noteList = noteDataInterface.getAllNotesForCategory(integers[0].intValue());
+            return (List<Note>) noteList;
         }
     }
 

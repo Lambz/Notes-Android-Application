@@ -1,6 +1,7 @@
 package com.lambton.projects.note_wethree_android.dataHandler.dao;
 
 import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -11,7 +12,7 @@ import androidx.room.Update;
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Note;
 
 import java.util.List;
-
+@Dao
 public interface NoteDataInterface {
     @Transaction
     @Insert(onConflict = OnConflictStrategy.ABORT)
