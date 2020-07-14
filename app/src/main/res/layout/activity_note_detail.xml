@@ -41,6 +41,15 @@
         app:layout_constraintTop_toBottomOf="@+id/notes_detail_title"
         android:layout_marginTop="20dp"/>
 
+    <ImageView
+        android:id="@+id/imageview"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <Button
         android:id="@+id/foler_btn"
         android:layout_width="30dp"
@@ -65,6 +74,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginLeft="80dp"
+        android:onClick="cameraClicked"
         android:background="@mipmap/camera_icon"
         android:backgroundTint="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"

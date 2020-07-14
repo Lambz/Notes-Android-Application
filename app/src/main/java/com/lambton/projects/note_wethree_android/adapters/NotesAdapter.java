@@ -16,6 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lambton.projects.note_wethree_android.R;
+import com.lambton.projects.note_wethree_android.activities.NoteDetailActivity;
 import com.lambton.projects.note_wethree_android.activities.NotesListActivity;
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Note;
 
@@ -72,9 +73,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>
         }
         holder.mConstraintLayout.setOnClickListener(v ->
         {
-//            Intent intent = new Intent(mContext, NotesListActivity.class);
+            Intent intent = new Intent(mContext, NoteDetailActivity.class);
 //            intent.putExtra("category",mCategoryList.get(position));
-//            mContext.startActivity(intent);
+            mContext.startActivity(intent);
         });
     }
 

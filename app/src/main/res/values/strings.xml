@@ -4,4 +4,5 @@
     <string name="label_type_your_comment">Category Name</string>
     <string name="label_submit">Add</string>
     <string name="label_cancel">Cancel</string>
+    <string name="cancel">Cancel</string>
 </resources>

@@ -1,5 +1,7 @@
 package com.lambton.projects.note_wethree_android.activities;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -31,6 +34,8 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 public class CategoryListActivity extends AppCompatActivity
 {
 
+    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1001;
+
     private RecyclerView mRecyclerView;
     private CategoriesAdapter mCategoriesAdapter;
     //Category list variables
@@ -40,6 +45,7 @@ public class CategoryListActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_list);
+        askForPermissions();
         setMemberVariables();
     }
 
@@ -148,4 +154,37 @@ public class CategoryListActivity extends AppCompatActivity
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
     };
+
+    private void askForPermissions()
+    {
+        if (ContextCompat.checkSelfPermission(CategoryListActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(CategoryListActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        {
+
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(CategoryListActivity.this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE) && ActivityCompat.shouldShowRequestPermissionRationale(CategoryListActivity.this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else
+            {
+                // No explanation needed; request the permission
+                ActivityCompat.requestPermissions(CategoryListActivity.this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else
+        {
+            // Permission has already been granted
+        }
+    }
+
 }
