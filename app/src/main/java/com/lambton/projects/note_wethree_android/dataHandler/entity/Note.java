@@ -1,6 +1,7 @@
 package com.lambton.projects.note_wethree_android.dataHandler.entity;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -24,6 +25,7 @@ public class Note implements Serializable {
     @NonNull
     private String noteCreatedDate;
     private String noteAudio;
+    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
     private Byte[] noteImage;
     private double noteLongitude;
     private double noteLatitude;
