@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,11 +31,14 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>
     private static final String TAG = "NotesAdapter";
     private Context mContext;
     private List<Note> mNoteList;
+    private boolean mIsEditing = false;
+    private List<Note> mSelectNotes;
 
     public NotesAdapter(Context context, List<Note> noteList)
     {
         this.mContext = context;
         mNoteList = noteList;
+        mSelectNotes = new ArrayList<>();
     }
 
     @NonNull
@@ -52,30 +56,35 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>
     {
         final Note note = mNoteList.get(position);
         holder.mTitleTextView.setText(note.getNoteTitle());
-        if(!note.getNoteDescription().isEmpty())
+        if (!note.getNoteDescription().isEmpty())
         {
+            holder.mDescTextView.setVisibility(View.VISIBLE);
             holder.mDescTextView.setText(note.getNoteDescription());
-        }
-        else
+        } else
         {
             holder.mDescTextView.setVisibility(View.GONE);
         }
-        if(note.getNoteImage() != null)
+        if (note.getNoteImageAsBitmap() != null)
         {
-            if(note.getNoteImage() != null)
-            {
-                holder.mImageView.setImageBitmap(note.getNoteImageAsBitmap());
-            }
-        }
-        else
+            holder.mImageView.setVisibility(View.VISIBLE);
+            holder.mImageView.setImageBitmap(note.getNoteImageAsBitmap());
+        } else
         {
+            System.out.println("found null image for: "+note.getNoteTitle());
             holder.mImageView.setVisibility(View.GONE);
         }
         holder.mConstraintLayout.setOnClickListener(v ->
         {
-            Intent intent = new Intent(mContext, NoteDetailActivity.class);
-            intent.putExtra("note",mNoteList.get(position));
-            mContext.startActivity(intent);
+            if (mIsEditing)
+            {
+                holder.mConstraintLayout.setBackgroundColor(Color.GRAY);
+                mSelectNotes.add(mNoteList.get(position));
+            } else
+            {
+                Intent intent = new Intent(mContext, NoteDetailActivity.class);
+                intent.putExtra("note", mNoteList.get(position));
+                mContext.startActivity(intent);
+            }
         });
     }
 
@@ -84,6 +93,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>
     {
         Log.v(TAG, "getItemCount: " + mNoteList.size());
         return mNoteList.size();
+    }
+
+    public void setEditing(boolean isEditing)
+    {
+        mIsEditing = isEditing;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder
@@ -112,12 +126,17 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>
 
     public void addItem(Note note, int position)
     {
-        mNoteList.add(position,note);
+        mNoteList.add(position, note);
         notifyItemInserted(position);
     }
 
     public void setNewData(List<Note> noteList)
     {
         mNoteList = noteList;
+    }
+
+    public List<Note> getSelectNotes()
+    {
+        return mSelectNotes;
     }
 }

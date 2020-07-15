@@ -34,6 +34,7 @@
         android:layout_height="50dp"
         android:background="@android:color/transparent"
         android:text="Edit"
+        android:onClick="editClicked"
         android:textColor="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="@id/backBtn"
         app:layout_constraintRight_toRightOf="parent"
@@ -81,6 +82,8 @@
         android:backgroundTint="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
+        android:visibility="gone"
+        android:onClick="moveToClicked"
         android:layout_margin="10dp"/>
     
     <Button
@@ -97,10 +100,10 @@
         android:id="@+id/num_notes_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/move_to_btn"
-        app:layout_constraintBottom_toBottomOf="@id/move_to_btn"
-        app:layout_constraintLeft_toRightOf="@id/move_to_btn"
-        app:layout_constraintRight_toLeftOf="@id/new_note_btn"
+        android:layout_margin="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         android:text="Number of Notes"/>
 
 

@@ -150,6 +150,7 @@ public class NoteDetailActivity extends AppCompatActivity
         {
             requestLocationPermission();
         }
+        mImageView.setOnLongClickListener(mImageViewOnLongClickListener);
     }
 
     public void saveClicked(View view)
@@ -302,13 +303,13 @@ public class NoteDetailActivity extends AppCompatActivity
         mVibrator.vibrate(VIBRATION_PERIOD);
     }
 
-    Button.OnLongClickListener mAudioButtonLongClickListener = new Button.OnLongClickListener()
+    Button.OnLongClickListener mAudioButtonLongClickListener = v ->
     {
-        @Override
-        public boolean onLongClick(View v)
+        if(mIsRecorded)
         {
-            return false;
+            showRemoveAudioAlert();
         }
+        return false;
     };
 
     Button.OnClickListener mAudioButtonClickListener = new Button.OnClickListener()
@@ -384,13 +385,79 @@ public class NoteDetailActivity extends AppCompatActivity
 
     public void deleteClicked(View view)
     {
-        mNoteHelperRepository.deleteNoteFromDatabase(mNote);
-        finish();
+        showDeleteNoteAlert();
     }
 
     public void moveToClicked(View view)
     {
         Intent intent = new Intent(this,MoveToActivity.class);
         startActivityForResult(intent,MOVE_TO_CATEGORY_REQUEST);
+    }
+
+    public void showRemoveAudioAlert()
+    {
+        new AlertDialog.Builder(this)
+                .setTitle("Delete Recording")
+                .setMessage("Are you sure you want to delete the audio recording?")
+                .setCancelable(true)
+                .setPositiveButton("Yes", (dialog, which) -> deleteRecording())
+                .setNegativeButton("No",(dialog, which) -> dialog.dismiss())
+                .create().show();
+    }
+
+    private void deleteRecording()
+    {
+        mIsRecorded = false;
+        mRecordedAudio = null;
+        mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_mic_none_24));
+    }
+
+    public void showDeleteNoteAlert()
+    {
+        new AlertDialog.Builder(this)
+                .setTitle("Delete Note")
+                .setMessage("Are you sure you want to delete this note?")
+                .setCancelable(true)
+                .setPositiveButton("Yes", (dialog, which) -> deleteNote())
+                .setNegativeButton("No",(dialog, which) -> dialog.dismiss())
+                .create().show();
+    }
+
+    private void deleteNote()
+    {
+        if(mNote!=null)
+        {
+            mNoteHelperRepository.deleteNoteFromDatabase(mNote);
+        }
+        finish();
+    }
+
+    private ImageView.OnLongClickListener mImageViewOnLongClickListener = new View.OnLongClickListener()
+    {
+        @Override
+        public boolean onLongClick(View v)
+        {
+            showDeleteImageAlert();
+            return false;
+        }
+    };
+
+    public void showDeleteImageAlert()
+    {
+        new AlertDialog.Builder(this)
+                .setTitle("Delete Image")
+                .setMessage("Are you sure you want to delete this Image?")
+                .setCancelable(true)
+                .setPositiveButton("Yes", (dialog, which) -> deleteImage())
+                .setNegativeButton("No",(dialog, which) -> dialog.dismiss())
+                .create().show();
+    }
+
+    private void deleteImage()
+    {
+        mSelectedImage = null;
+        mImageView.setVisibility(View.GONE);
+        mNote.setNoteImageAsBitmap(null);
+        mNoteHelperRepository.updateNoteInDatabase(mNote);
     }
 }
