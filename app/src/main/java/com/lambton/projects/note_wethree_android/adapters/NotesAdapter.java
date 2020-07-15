@@ -56,14 +56,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>
         {
             holder.mDescTextView.setText(note.getNoteDescription());
         }
+        else
+        {
+            holder.mDescTextView.setVisibility(View.GONE);
+        }
         if(note.getNoteImage() != null)
         {
-//            File imgFile = new File(note.getNoteImage());
-//            if(imgFile.exists()){
-//
-//                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-//                holder.mImageView.setImageBitmap(myBitmap);
-//            };
             if(note.getNoteImage() != null)
             {
                 holder.mImageView.setImageBitmap(note.getNoteImageAsBitmap());

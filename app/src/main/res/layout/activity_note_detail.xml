@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:gravity="center_vertical"
-        android:text="Note Category"
+        android:text="New Note"
         android:textColor="@android:color/black"
         android:textSize="24dp"
         app:layout_constraintBottom_toBottomOf="@id/backBtn"
@@ -101,6 +101,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@mipmap/folder"
+            android:onClick="moveToClicked"
             android:backgroundTint="@color/colorAccent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent" />
@@ -111,6 +112,7 @@
             android:layout_height="30dp"
             android:background="@mipmap/delete_icon"
             android:backgroundTint="@color/colorAccent"
+            android:onClick="deleteClicked"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/foler_btn"
             app:layout_constraintRight_toLeftOf="@id/camera_btn" />

@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,15 +36,17 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 public class NotesListActivity extends AppCompatActivity{
 
+    private static final int MOVE_TO_CATEGORY_REQUEST = 1234;
     private RecyclerView mRecyclerView;
     private TextView mNumNotesTextView;
+    private TextView mCategoryNameTextView;
 
     private Category mCategory;
     private boolean mIsEditing = false;
-    private final int MOVE_TO_REQUEST_CODE = 1;
     private NotesAdapter mNotesAdapter = null;
     private List<Note> mNoteList;
     private NoteHelperRepository mNoteHelperRepository;
+    private List<Note> mNotesToMove;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +61,10 @@ public class NotesListActivity extends AppCompatActivity{
         mRecyclerView = findViewById(R.id.recycler_view);
         mCategory = (Category) getIntent().getSerializableExtra("category");
         mNumNotesTextView = findViewById(R.id.num_notes_textview);
+        mCategoryNameTextView = findViewById(R.id.category_name_textview);
         mNoteList = new ArrayList<>();
         mNoteHelperRepository = new NoteHelperRepository(this.getApplication());
+        mCategoryNameTextView.setText(mCategory.getCategoryName());
     }
 
     @Override
@@ -81,6 +86,7 @@ public class NotesListActivity extends AppCompatActivity{
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mNotesAdapter);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(mSimpleCallBack);
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
@@ -88,7 +94,7 @@ public class NotesListActivity extends AppCompatActivity{
     public void moveToClicked(View view)
     {
         Intent intent = new Intent(NotesListActivity.this, MoveToActivity.class);
-        startActivityForResult(intent, MOVE_TO_REQUEST_CODE);
+        startActivityForResult(intent, MOVE_TO_CATEGORY_REQUEST);
     }
 
     public void newNoteClicked(View view)
@@ -101,9 +107,17 @@ public class NotesListActivity extends AppCompatActivity{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == MOVE_TO_REQUEST_CODE && requestCode == Activity.RESULT_OK)
+        if(requestCode == MOVE_TO_CATEGORY_REQUEST )
         {
-
+            Category category = (Category) data.getSerializableExtra("category");
+            for(Note note: mNotesToMove)
+            {
+                note.setNoteCategoryId(category.getId());
+                mNoteList.remove(note);
+                mNoteHelperRepository.updateNoteInDatabase(note);
+            }
+            mNotesAdapter.setNewData(mNoteList);
+            mNotesAdapter.notifyDataSetChanged();
         }
     }
 
@@ -138,7 +152,10 @@ public class NotesListActivity extends AppCompatActivity{
             }
             else if (direction == ItemTouchHelper.RIGHT)
             {
-                // Get Note at position
+                mNotesToMove = new ArrayList<>();
+                mNotesToMove.add(mNoteList.get(position));
+                Intent intent = new Intent(NotesListActivity.this, MoveToActivity.class);
+                startActivityForResult(intent,MOVE_TO_CATEGORY_REQUEST);
             }
         }
 

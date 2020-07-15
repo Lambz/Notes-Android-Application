@@ -58,6 +58,7 @@ public class NoteDetailActivity extends AppCompatActivity
     private static final int GALLERY_REQUEST_CODE = 2404;
     private static final int CAMERA_PERM_CODE = 101;
     private static final long VIBRATION_PERIOD = 500;
+    private static final int MOVE_TO_CATEGORY_REQUEST = 1234;
 
     private EditText mTitleEditText;
     private EditText mDescriptionEditText;
@@ -95,6 +96,10 @@ public class NoteDetailActivity extends AppCompatActivity
 
     private void setData()
     {
+        if(mNote == null)
+        {
+            return;
+        }
         mNoteTopTextView.setText("Update Note");
         mTitleEditText.setText(mNote.getNoteTitle());
         mDescriptionEditText.setText(mNote.getNoteDescription());
@@ -377,4 +382,15 @@ public class NoteDetailActivity extends AppCompatActivity
         mMediaRecorder.setOutputFile(mRecordedAudio);
     }
 
+    public void deleteClicked(View view)
+    {
+        mNoteHelperRepository.deleteNoteFromDatabase(mNote);
+        finish();
+    }
+
+    public void moveToClicked(View view)
+    {
+        Intent intent = new Intent(this,MoveToActivity.class);
+        startActivityForResult(intent,MOVE_TO_CATEGORY_REQUEST);
+    }
 }

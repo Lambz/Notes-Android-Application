@@ -241,16 +241,24 @@ public class CategoryListActivity extends AppCompatActivity
         @Override
         public boolean onQueryTextChange(String newText)
         {
-            List<Category> categories = new ArrayList<>();
-            for(Category category: mCategoryList)
+            try
             {
-                if(category.getCategoryName().contains(newText))
+                List<Category> categories = new ArrayList<>();
+                for(Category category: mCategoryList)
                 {
-                    categories.add(category);
+                    if(category.getCategoryName().contains(newText))
+                    {
+                        categories.add(category);
+                    }
                 }
+                mCategoriesAdapter.setNewData(categories);
+                mCategoriesAdapter.notifyDataSetChanged();
             }
-            mCategoriesAdapter.setNewData(categories);
-            mCategoriesAdapter.notifyDataSetChanged();
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
             return false;
         }
     };
