@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -31,6 +32,7 @@ import com.lambton.projects.note_wethree_android.dataHandler.NoteHelperRepositor
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -46,6 +48,8 @@ public class CategoryListActivity extends AppCompatActivity
     private CategoryHelperRepository mCategoryHelperRepository;
     private List<Category> mCategoryList = new ArrayList<>();
     private SearchView mSearchView;
+    private TextView mSortTextView;
+    private int mSort = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -62,6 +66,7 @@ public class CategoryListActivity extends AppCompatActivity
         mRecyclerView = findViewById(R.id.recycler_view);
         mSearchView = findViewById(R.id.search_view);
         mSearchView.setOnQueryTextListener(mQueryTextListener);
+        mSortTextView = findViewById(R.id.sort_textview);
     }
 
     @Override
@@ -263,4 +268,33 @@ public class CategoryListActivity extends AppCompatActivity
         }
     };
 
+    public void sortClicked(View view)
+    {
+        switch (mSort)
+        {
+            case 0:
+                sortTitleDesc();
+                break;
+            case 1:
+                sortTitleAsc();
+        }
+    }
+
+    private void sortTitleAsc()
+    {
+        mCategoryList.sort((o1, o2) -> o1.getCategoryName().compareTo(o2.getCategoryName()));
+        mCategoriesAdapter.setNewData(mCategoryList);
+        mCategoriesAdapter.notifyDataSetChanged();
+        mSortTextView.setText("Title Asc");
+        mSort = 0;
+    }
+
+    private void sortTitleDesc()
+    {
+        mCategoryList.sort((o1, o2) -> -o1.getCategoryName().compareTo(o2.getCategoryName()));
+        mCategoriesAdapter.setNewData(mCategoryList);
+        mCategoriesAdapter.notifyDataSetChanged();
+        mSortTextView.setText("Title Desc");
+        mSort = 1;
+    }
 }
