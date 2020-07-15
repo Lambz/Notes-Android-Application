@@ -3,12 +3,14 @@ package com.lambton.projects.note_wethree_android.dataHandler;
 import android.app.Application;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
 import com.lambton.projects.note_wethree_android.dataHandler.dao.CategoryDataInterface;
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -37,7 +39,7 @@ public class CategoryHelperRepository {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void insertNewCategoryInDatabase(Category category) {
         if(category == null) {
-            new NullPointerException();
+            Log.i("Category insertion error!", "Trying to set null value");
         }
         else {
             new CategoryHelperRepository.InsertCategory(categoryDataInterface).execute(category);
@@ -46,7 +48,7 @@ public class CategoryHelperRepository {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public List<Category> getAllCategories() {
-        List<Category> categoryList = null;
+        List<Category> categoryList = new ArrayList<>();
         try {
             categoryList = new CategoryHelperRepository.FetchAllCategories(categoryDataInterface).execute().get();
         } catch (ExecutionException e) {

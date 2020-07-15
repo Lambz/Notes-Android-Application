@@ -3,6 +3,7 @@ package com.lambton.projects.note_wethree_android.dataHandler;
 import android.app.Application;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -10,6 +11,7 @@ import androidx.annotation.RequiresApi;
 import com.lambton.projects.note_wethree_android.dataHandler.dao.NoteDataInterface;
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Note;
 
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
@@ -47,8 +49,8 @@ public class NoteHelperRepository {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void insertNewNoteInDatabase(Note note) {
-        if(note == null) {
-            new NullPointerException();
+        if(note != null) {
+            Log.i("Note insertion error!","Trying to set null value");
         }
         else {
             new NoteHelperRepository.InsertNote(noteDataInterface).execute(note);
@@ -58,7 +60,7 @@ public class NoteHelperRepository {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void updateNoteInDatabase(Note note) {
         if(note == null) {
-            new NullPointerException();
+            Log.i("Note updation error!","Trying to set null value");
         }
         else {
             new NoteHelperRepository.UpdateNote(noteDataInterface).execute(note);
@@ -71,7 +73,7 @@ public class NoteHelperRepository {
     }
 
     public List<Note> getNotesForCategory(int categoryId) {
-        List<Note> noteList = null;
+        List<Note> noteList = new ArrayList<>();
         try {
             noteList = new FetchNotes(noteDataInterface).execute(categoryId).get();
         } catch (ExecutionException e) {
@@ -96,7 +98,7 @@ public class NoteHelperRepository {
     }
 
     public List<Note> searchNotesByKeyword(String searchString, int categoryId) {
-        List<Note> noteList = null;
+        List<Note> noteList = new ArrayList<>();
         if(searchString != null) {
             String string = "%" + searchString + "%";
             Dictionary<String, Integer> sendQuery = new Hashtable();
@@ -113,7 +115,7 @@ public class NoteHelperRepository {
     }
 
     public List<Note> fetchSortedNotesByDate(int categoryId) {
-        List<Note> noteList = null;
+        List<Note> noteList = new ArrayList<>();
         try {
             noteList =  new SortNotesByDate(noteDataInterface).execute(categoryId).get();
         } catch (ExecutionException e) {
@@ -125,7 +127,7 @@ public class NoteHelperRepository {
     }
 
     public List<Note> fetchSortedNotesByName(int categoryId) {
-        List<Note> noteList = null;
+        List<Note> noteList = new ArrayList<>();
         try {
             noteList =  new SortNotesByName(noteDataInterface).execute(categoryId).get();
         } catch (ExecutionException e) {
