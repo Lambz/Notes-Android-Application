@@ -12,6 +12,19 @@ import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+/*
+    Helper class for performing operations on Category Data
+    Method signatures:
+
+    public void insertNewCategoryInDatabase(Category category);
+
+    public void deleteCategoryFromDatabase(Category category);
+
+    public List<Category> getAllCategories();
+
+ */
+
+
 public class CategoryHelperRepository {
 
     private CategoryDataInterface categoryDataInterface;
@@ -44,7 +57,7 @@ public class CategoryHelperRepository {
         return categoryList;
     }
 
-    public void delteCategoryFromDatabase(Category category) {
+    public void deleteCategoryFromDatabase(Category category) {
         new CategoryHelperRepository.DeleteCategory(categoryDataInterface).execute(category);
     }
 

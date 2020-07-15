@@ -38,4 +38,7 @@ public interface NoteDataInterface {
     @Transaction
     @Query("SELECT * FROM note_data WHERE noteCategoryId=:categoryId ORDER BY noteCreatedDate DESC")
     List<Note> getSortedNotesByDate(int categoryId);
+    @Transaction
+    @Query("SELECT * FROM note_data WHERE noteCategoryId=:categoryId ORDER BY noteTitle ASC")
+    List<Note> getSortedNotesByName(int categoryId);
 }

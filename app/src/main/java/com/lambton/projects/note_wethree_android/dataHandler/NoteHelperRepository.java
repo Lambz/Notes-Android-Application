@@ -15,6 +15,27 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+/*
+    Helper class for performing operations on Note Data
+    Method signatures:
+
+    <Basic operations>
+    public void insertNewNoteInDatabase(Note note);
+    public void updateNoteInDatabase(Note note);
+    public void deleteNoteFromDatabase(Note note);
+
+    <fetch operations>
+     public List<Note> getNotesForCategory(int categoryId);
+     public List<Note> fetchSortedNotesByDate(int categoryId);
+     public List<Note> fetchSortedNotesByName(int categoryId);
+
+     <other operations>
+     public void moveNotesToCategory(List<Note> noteList, int categoryId);
+     public List<Note> searchNotesByKeyword(String searchString, int categoryId);
+
+ */
+
+
 public class NoteHelperRepository {
     private NoteDataInterface noteDataInterface;
 
@@ -45,7 +66,7 @@ public class NoteHelperRepository {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void delteNoteFromDatabase(Note note) {
+    public void deleteNoteFromDatabase(Note note) {
         new NoteHelperRepository.DeleteNote(noteDataInterface).execute(note);
     }
 
@@ -95,6 +116,18 @@ public class NoteHelperRepository {
         List<Note> noteList = null;
         try {
             noteList =  new SortNotesByDate(noteDataInterface).execute(categoryId).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return noteList;
+    }
+
+    public List<Note> fetchSortedNotesByName(int categoryId) {
+        List<Note> noteList = null;
+        try {
+            noteList =  new SortNotesByName(noteDataInterface).execute(categoryId).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -163,6 +196,20 @@ public class NoteHelperRepository {
         @Override
         protected List<Note> doInBackground(Integer... integers) {
             return noteDataInterface.getSortedNotesByDate(integers[0]);
+        }
+    }
+
+    private static class SortNotesByName extends AsyncTask<Integer, Void, List<Note>> {
+
+        private NoteDataInterface noteDataInterface;
+
+        private SortNotesByName(NoteDataInterface noteDataInterface) {
+            this.noteDataInterface = noteDataInterface;
+        }
+
+        @Override
+        protected List<Note> doInBackground(Integer... integers) {
+            return noteDataInterface.getSortedNotesByName(integers[0]);
         }
     }
 
