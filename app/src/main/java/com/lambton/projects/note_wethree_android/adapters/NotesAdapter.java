@@ -31,12 +31,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>
     private Context mContext;
     private List<Note> mNoteList;
 
-    public NotesAdapter(Context context)
+    public NotesAdapter(Context context, List<Note> noteList)
     {
         this.mContext = context;
-        mNoteList = new ArrayList<>();
-        mNoteList.add(new Note("Note 1","Desc 1",1));
-        mNoteList.add(new Note("Note 2","Desc 2",1));
+        mNoteList = noteList;
     }
 
     @NonNull
@@ -118,5 +116,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>
     {
         mNoteList.add(position,note);
         notifyItemInserted(position);
+    }
+
+    public void setNewData(List<Note> noteList)
+    {
+        mNoteList = noteList;
     }
 }

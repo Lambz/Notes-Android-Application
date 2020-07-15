@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +23,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.lambton.projects.note_wethree_android.R;
 import com.lambton.projects.note_wethree_android.adapters.CategoriesAdapter;
 import com.lambton.projects.note_wethree_android.adapters.NotesAdapter;
+import com.lambton.projects.note_wethree_android.dataHandler.NoteHelperRepository;
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Note;
 
@@ -34,11 +36,14 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 public class NotesListActivity extends AppCompatActivity{
 
     private RecyclerView mRecyclerView;
+    private TextView mNumNotesTextView;
+
     private Category mCategory;
     private boolean mIsEditing = false;
     private final int MOVE_TO_REQUEST_CODE = 1;
     private NotesAdapter mNotesAdapter = null;
     private List<Note> mNoteList;
+    private NoteHelperRepository mNoteHelperRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +57,9 @@ public class NotesListActivity extends AppCompatActivity{
         // Set ListView Object
         mRecyclerView = findViewById(R.id.recycler_view);
         mCategory = (Category) getIntent().getSerializableExtra("category");
+        mNumNotesTextView = findViewById(R.id.num_notes_textview);
         mNoteList = new ArrayList<>();
+        mNoteHelperRepository = new NoteHelperRepository(this.getApplication());
     }
 
     @Override
@@ -64,12 +71,13 @@ public class NotesListActivity extends AppCompatActivity{
 
     private void getNotes()
     {
-        // Get Notes
+        mNoteList = mNoteHelperRepository.getNotesForCategory(mCategory.getId());
+        mNumNotesTextView.setText("Number of Notes: "+mNoteList.size());
     }
 
     private void setRecyclerViewData()
     {
-        mNotesAdapter = new NotesAdapter(this);
+        mNotesAdapter = new NotesAdapter(this, mNoteList);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mNotesAdapter);
@@ -86,6 +94,7 @@ public class NotesListActivity extends AppCompatActivity{
     public void newNoteClicked(View view)
     {
         Intent intent = new Intent(NotesListActivity.this, NoteDetailActivity.class);
+        intent.putExtra("category",mCategory);
         startActivity(intent);
     }
 

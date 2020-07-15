@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -25,8 +26,12 @@ import com.google.android.material.snackbar.Snackbar;
 import com.lambton.projects.note_wethree_android.R;
 import com.lambton.projects.note_wethree_android.Utils;
 import com.lambton.projects.note_wethree_android.adapters.CategoriesAdapter;
+import com.lambton.projects.note_wethree_android.dataHandler.CategoryHelperRepository;
+import com.lambton.projects.note_wethree_android.dataHandler.NoteHelperRepository;
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
@@ -38,7 +43,9 @@ public class CategoryListActivity extends AppCompatActivity
 
     private RecyclerView mRecyclerView;
     private CategoriesAdapter mCategoriesAdapter;
-    //Category list variables
+    private CategoryHelperRepository mCategoryHelperRepository;
+    private List<Category> mCategoryList = new ArrayList<>();
+    private SearchView mSearchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -51,8 +58,10 @@ public class CategoryListActivity extends AppCompatActivity
 
     private void setMemberVariables()
     {
-        // Set ListView Object
+        mCategoryHelperRepository = new CategoryHelperRepository(this.getApplication());
         mRecyclerView = findViewById(R.id.recycler_view);
+        mSearchView = findViewById(R.id.search_view);
+        mSearchView.setOnQueryTextListener(mQueryTextListener);
     }
 
     @Override
@@ -65,12 +74,12 @@ public class CategoryListActivity extends AppCompatActivity
 
     private void getCategories()
     {
-        // Get Categories
+        mCategoryList = mCategoryHelperRepository.getAllCategories();
     }
 
     private void setRecyclerViewData()
     {
-        mCategoriesAdapter = new CategoriesAdapter(this);
+        mCategoriesAdapter = new CategoriesAdapter(this,mCategoryList);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mCategoriesAdapter);
@@ -107,7 +116,13 @@ public class CategoryListActivity extends AppCompatActivity
             Utils.showError("Invalid Category Name","Please enter a valid Category Name",this);
             return;
         }
-        // Add new Category
+        Category category = new Category(category_name);
+        CategoryHelperRepository helperRepository = new CategoryHelperRepository(this.getApplication());
+        helperRepository.insertNewCategoryInDatabase(category);
+//        getCategories();
+        mCategoryList.add(category);
+        mCategoriesAdapter.setNewData(mCategoryList);
+        mCategoriesAdapter.notifyDataSetChanged();
     }
 
     ItemTouchHelper.SimpleCallback mSimpleCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT)
@@ -135,7 +150,7 @@ public class CategoryListActivity extends AppCompatActivity
                 {
                     if(delete.get())
                     {
-                        //Delete Category
+                        mCategoryHelperRepository.deleteCategoryFromDatabase(category);
                     }
                 },3000);
             }
@@ -196,5 +211,48 @@ public class CategoryListActivity extends AppCompatActivity
             // Permission has already been granted
         }
     }
+
+    SearchView.OnQueryTextListener mQueryTextListener = new SearchView.OnQueryTextListener()
+    {
+        @Override
+        public boolean onQueryTextSubmit(String query)
+        {
+            if(query.isEmpty())
+            {
+                getCategories();
+                mCategoriesAdapter.setNewData(mCategoryList);
+            }
+            else
+            {
+                List<Category> categories = new ArrayList<>();
+                for(Category category: mCategoryList)
+                {
+                    if(category.getCategoryName().contains(query))
+                    {
+                        categories.add(category);
+                    }
+                }
+                mCategoriesAdapter.setNewData(categories);
+            }
+            mCategoriesAdapter.notifyDataSetChanged();
+            return true;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText)
+        {
+            List<Category> categories = new ArrayList<>();
+            for(Category category: mCategoryList)
+            {
+                if(category.getCategoryName().contains(newText))
+                {
+                    categories.add(category);
+                }
+            }
+            mCategoriesAdapter.setNewData(categories);
+            mCategoriesAdapter.notifyDataSetChanged();
+            return false;
+        }
+    };
 
 }

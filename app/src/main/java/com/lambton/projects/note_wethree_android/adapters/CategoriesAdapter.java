@@ -13,7 +13,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lambton.projects.note_wethree_android.R;
+import com.lambton.projects.note_wethree_android.activities.CategoryListActivity;
 import com.lambton.projects.note_wethree_android.activities.NotesListActivity;
+import com.lambton.projects.note_wethree_android.dataHandler.CategoryHelperRepository;
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
 
 import java.util.ArrayList;
@@ -26,13 +28,12 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     private Context mContext;
     private List<Category> mCategoryList;
 
-    public CategoriesAdapter(Context context)
+    public CategoriesAdapter(Context context, List<Category> categoryList)
     {
         this.mContext = context;
-        mCategoryList = new ArrayList<>();
-        mCategoryList.add(new Category("Hello"));
-        mCategoryList.add(new Category("world"));
+        this.mCategoryList = categoryList;
     }
+
 
     @NonNull
     @Override
@@ -76,6 +77,11 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     {
         mCategoryList.add(position,category);
         notifyItemInserted(position);
+    }
+
+    public void setNewData(List<Category> categoryList)
+    {
+        mCategoryList = categoryList;
     }
 
 

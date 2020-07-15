@@ -1,6 +1,7 @@
 package com.lambton.projects.note_wethree_android.activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -8,6 +9,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -33,14 +36,21 @@ import androidx.core.content.ContextCompat;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.lambton.projects.note_wethree_android.R;
+import com.lambton.projects.note_wethree_android.Utils;
+import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Note;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
-public class NoteDetailActivity extends AppCompatActivity {
+public class NoteDetailActivity extends AppCompatActivity
+{
 
+    private static final int REQUEST_CODE = 1;
     private static final int CAMERA_REQUEST_CODE = 121;
     private static final int GALLERY_REQUEST_CODE = 2404;
     private static final int CAMERA_PERM_CODE = 101;
@@ -50,8 +60,10 @@ public class NoteDetailActivity extends AppCompatActivity {
     private EditText mDescriptionEditText;
     private Button mDeleteButton;
     private Button mCameraButton;
+    private Button mLocationButton;
+    private Button mFolderButton;
     private ImageView mImageView;
-    private Integer mPosition;
+
     private Bitmap mSelectedImage;
     private Animation mShakeAnimation;
     private Vibrator mVibrator;
@@ -62,17 +74,22 @@ public class NoteDetailActivity extends AppCompatActivity {
     private boolean mIsPlaying = false;
     private MediaRecorder mMediaRecorder;
     private MediaPlayer mMediaPlayer;
+    private LocationManager mLocationManager;
+    private Category mCategory;
+    private Note mNote;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_detail);
-        mPosition = (Integer) getIntent().getSerializableExtra("position");
         saveMemberVariables();
     }
 
     private void saveMemberVariables()
     {
+        mNote = (Note) getIntent().getSerializableExtra("note");
+        mCategory = (Category) getIntent().getSerializableExtra("category");
         mShakeAnimation = AnimationUtils.loadAnimation(NoteDetailActivity.this, R.anim.shake);
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         mTitleEditText = findViewById(R.id.notes_detail_title);
@@ -83,30 +100,61 @@ public class NoteDetailActivity extends AppCompatActivity {
         mAudioButton = findViewById(R.id.audio_btn);
         mAudioButton.setOnLongClickListener(mAudioButtonLongClickListener);
         mAudioButton.setOnClickListener(mAudioButtonClickListener);
-        if(mPosition == null)
+        if (mNote == null)
         {
             mDeleteButton.setVisibility(View.GONE);
+        }
+        mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            requestLocationPermission();
+            return;
         }
     }
 
     public void saveClicked(View view)
     {
-        if(mPosition == null)
+        if (mNote == null)
         {
             String title = mTitleEditText.getText().toString();
             String description = mDescriptionEditText.getText().toString();
-            if(title.isEmpty())
+            if (title.isEmpty())
             {
                 shakeAndVibrate(mTitleEditText);
                 return;
             }
-            Note note = new Note(title,description,1);
+            Location location = null;
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+            {
+                location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            }
+            Note note = new Note(title,description,mCategory.getId());
+            if(mIsRecorded)
+            {
+                note.setNoteAudio(mRecordedAudio);
+            }
+            if(mSelectedImage != null)
+            {
+                note.setNoteImageAsBitmap(mSelectedImage);
+            }
+//            note.setNoteCreatedDate(new Date());
+            if(location != null)
+            {
+                note.setNoteLatitude(location.getLatitude());
+                note.setNoteLongitude(location.getLongitude());
+            }
+            Utils.dump(note);
             // Save New Note
         }
         else
         {
             // Update Existing Note
         }
+    }
+
+    private void requestLocationPermission()
+    {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
     }
 
     public void cameraClicked(View view)
@@ -285,4 +333,5 @@ public class NoteDetailActivity extends AppCompatActivity {
         mMediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
         mMediaRecorder.setOutputFile(mRecordedAudio);
     }
+
 }
