@@ -8,9 +8,11 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 
 import com.lambton.projects.note_wethree_android.dataHandler.dao.CategoryDataInterface;
+import com.lambton.projects.note_wethree_android.dataHandler.dao.NoteDataInterface;
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -26,16 +28,20 @@ import java.util.concurrent.ExecutionException;
 
     public List<Category> getAllCategoriesSortedByTitle()
 
+    public int getNoteCountForCategory(int categoryId)
+
  */
 
 
 public class CategoryHelperRepository {
 
     private CategoryDataInterface categoryDataInterface;
+    private NoteDataInterface noteDataInterface;
+
     public CategoryHelperRepository(Application application) {
         NoteDatabase noteDatabase = NoteDatabase.getInstance(application);
         categoryDataInterface = noteDatabase.categoryDataInterface();
-
+        noteDataInterface = noteDatabase.noteDataInterface();
     }
 //    category operations
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -72,6 +78,18 @@ public class CategoryHelperRepository {
             e.printStackTrace();
         }
         return categoryList;
+    }
+
+    public int getNoteCountForCategory(int categoryId) {
+        int noteCount = 0;
+        try {
+            noteCount =  new CategoryHelperRepository.FetchNoteCountForCategory(noteDataInterface).execute(categoryId).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return noteCount;
     }
 
     public void deleteCategoryFromDatabase(Category category) {
@@ -123,6 +141,21 @@ public class CategoryHelperRepository {
         @Override
         protected List<Category> doInBackground(Void... voids) {
             return categoryDataInterface.loadAllCategoriesSortedByTitle();
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private static class FetchNoteCountForCategory extends AsyncTask<Integer, Void, Integer> {
+
+        private NoteDataInterface noteDataInterface;
+
+        private FetchNoteCountForCategory(NoteDataInterface noteDataInterface) {
+            this.noteDataInterface = noteDataInterface;
+        }
+
+        @Override
+        protected Integer doInBackground(Integer... integers) {
+            return noteDataInterface.getNoteCountForCategory(integers[0]);
         }
     }
 

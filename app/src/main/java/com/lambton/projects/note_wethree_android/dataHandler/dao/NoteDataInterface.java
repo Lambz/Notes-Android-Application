@@ -41,4 +41,8 @@ public interface NoteDataInterface {
     @Transaction
     @Query("SELECT * FROM note_data WHERE noteCategoryId=:categoryId ORDER BY noteTitle ASC")
     List<Note> getSortedNotesByName(int categoryId);
+    @Transaction
+    @Query("SELECT COUNT(*) FROM note_data WHERE noteCategoryId=:categoryId")
+    Integer getNoteCountForCategory(int categoryId);
+
 }
