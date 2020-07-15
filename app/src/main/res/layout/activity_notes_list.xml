@@ -8,22 +8,31 @@
     tools:context=".activities.NotesListActivity">
     <Button
         android:id="@+id/backBtn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@android:drawable/ic_menu_revert"
-        android:text="Back"
-        android:backgroundTint="@color/colorAccent"
-        app:layout_constraintBottom_toTopOf="parent"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/ic_baseline_keyboard_arrow_left_24"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:onClick="backClicked"/>
+
+    <TextView
+        android:id="@+id/category_name_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/backBtn"
+        app:layout_constraintBottom_toBottomOf="@id/backBtn"
+        android:gravity="center_vertical"
+        android:text="Note Category"
+        android:textColor="@android:color/black"
+        android:textSize="24dp"/>
+
     <SearchView
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/backBtn"
-        app:layout_constraintBottom_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         />
@@ -33,11 +42,10 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/searchView"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

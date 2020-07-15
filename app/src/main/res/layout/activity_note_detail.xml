@@ -4,78 +4,81 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.NoteDetailActivity"
-    android:padding="20dp">
+    android:padding="20dp"
+    tools:context=".activities.NoteDetailActivity">
+
     <Button
         android:id="@+id/backBtn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@android:drawable/ic_menu_revert"
-        android:text="Back"
-        android:backgroundTint="@color/colorAccent"
-        app:layout_constraintBottom_toTopOf="parent"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/ic_baseline_keyboard_arrow_left_24"
+        android:onClick="backClicked"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/title"
-        android:layout_width="100dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="8dp"
-        android:text="Note's Detail"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:id="@+id/note_top_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:gravity="center_vertical"
+        android:text="Note Category"
+        android:textColor="@android:color/black"
+        android:textSize="24dp"
+        app:layout_constraintBottom_toBottomOf="@id/backBtn"
+        app:layout_constraintLeft_toRightOf="@id/backBtn"
+        app:layout_constraintRight_toLeftOf="@id/saveBtn"
+        app:layout_constraintTop_toTopOf="@id/backBtn" />
 
-    </TextView>
     <Button
         android:id="@+id/saveBtn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="70dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@android:drawable/ic_menu_revert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
         android:text="Save"
-        android:backgroundTint="@color/colorAccent"
-        app:layout_constraintLeft_toRightOf="@id/title"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/notes_detail_title"
-
-       />
+        android:onClick="saveClicked"
+        android:gravity="right|center_vertical"
+        android:textColor="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="@id/note_top_textview"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/note_top_textview" />
 
     <EditText
         android:id="@+id/notes_detail_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:background="@android:color/transparent"
+        android:hint="Title"
         android:textSize="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-
-        app:layout_constraintTop_toBottomOf="@id/title"/>
+        app:layout_constraintTop_toBottomOf="@id/note_top_textview" />
 
 
     <EditText
         android:id="@+id/notes_detail_desc"
         android:layout_width="match_parent"
-        android:layout_height="99dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@android:color/transparent"
+        android:gravity="top"
+        android:hint="Description"
+        android:inputType="textMultiLine"
+        app:layout_constraintBottom_toTopOf="@id/imageview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/notes_detail_title"
-        android:layout_marginTop="20dp"/>
+        app:layout_constraintTop_toBottomOf="@id/notes_detail_title" />
 
     <ImageView
         android:id="@+id/imageview"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         android:layout_height="200dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@id/foler_btn"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent" />
 
     <Button
         android:id="@+id/foler_btn"
@@ -84,7 +87,7 @@
         android:background="@mipmap/folder"
         android:backgroundTint="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <Button
         android:id="@+id/delete_btn"
@@ -101,9 +104,9 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginLeft="80dp"
-        android:onClick="cameraClicked"
         android:background="@mipmap/camera_icon"
         android:backgroundTint="@color/colorAccent"
+        android:onClick="cameraClicked"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/delete_btn" />
 

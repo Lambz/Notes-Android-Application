@@ -3,14 +3,18 @@ package com.lambton.projects.note_wethree_android.activities;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -31,7 +35,8 @@ public class NoteDetailActivity extends AppCompatActivity {
 
     private static final int CAMERA_REQUEST_CODE = 121;
     private static final int GALLERY_REQUEST_CODE = 2404;
-    private final int CAMERA_PERM_CODE = 101;
+    private static final int CAMERA_PERM_CODE = 101;
+    private static final long VIBRATION_PERIOD = 500;
 
     private EditText mTitleEditText;
     private EditText mDescriptionEditText;
@@ -40,6 +45,8 @@ public class NoteDetailActivity extends AppCompatActivity {
     private ImageView mImageView;
     private Integer mPosition;
     private Bitmap mSelectedImage;
+    private Animation mShakeAnimation;
+    private Vibrator mVibrator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +58,8 @@ public class NoteDetailActivity extends AppCompatActivity {
 
     private void saveMemberVariables()
     {
+        mShakeAnimation = AnimationUtils.loadAnimation(NoteDetailActivity.this, R.anim.shake);
+        mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         mTitleEditText = findViewById(R.id.notes_detail_title);
         mDescriptionEditText = findViewById(R.id.notes_detail_desc);
         mDeleteButton = findViewById(R.id.delete_btn);
@@ -64,8 +73,9 @@ public class NoteDetailActivity extends AppCompatActivity {
         {
             String title = mTitleEditText.getText().toString();
             String description = mDescriptionEditText.getText().toString();
-            if(title.equals(""))
+            if(title.isEmpty())
             {
+
                 return;
             }
             // Save New Note
@@ -141,6 +151,7 @@ public class NoteDetailActivity extends AppCompatActivity {
         {
             if (resultCode == RESULT_OK)
             {
+                mImageView.setVisibility(View.VISIBLE);
                 Bitmap bitmap = (Bitmap) data.getExtras().get("data");
                 mSelectedImage = bitmap;
                 mImageView.setImageBitmap(bitmap);
@@ -150,6 +161,7 @@ public class NoteDetailActivity extends AppCompatActivity {
         {
             if (resultCode == RESULT_OK && data != null && data.getData() != null)
             {
+                mImageView.setVisibility(View.VISIBLE);
                 File file = ImagePicker.Companion.getFile(data);
                 Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
                 mSelectedImage = bitmap;
@@ -158,4 +170,13 @@ public class NoteDetailActivity extends AppCompatActivity {
         }
     }
 
+    public void backClicked(View view)
+    {
+    }
+
+    private void shakeAndVibrate(EditText edittext)
+    {
+        edittext.startAnimation(mShakeAnimation);
+        mVibrator.vibrate(VIBRATION_PERIOD);
+    }
 }

@@ -150,4 +150,9 @@ public class NotesListActivity extends AppCompatActivity{
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
     };
+
+    public void backClicked(View view)
+    {
+        finish();
+    }
 }
