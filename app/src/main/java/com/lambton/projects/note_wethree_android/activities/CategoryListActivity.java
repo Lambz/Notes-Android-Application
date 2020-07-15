@@ -158,14 +158,20 @@ public class CategoryListActivity extends AppCompatActivity
     private void askForPermissions()
     {
         if (ContextCompat.checkSelfPermission(CategoryListActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(CategoryListActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                ContextCompat.checkSelfPermission(CategoryListActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(CategoryListActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(CategoryListActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(CategoryListActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
 
             // Permission is not granted
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(CategoryListActivity.this,
                     Manifest.permission.READ_EXTERNAL_STORAGE) && ActivityCompat.shouldShowRequestPermissionRationale(CategoryListActivity.this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)  && ActivityCompat.shouldShowRequestPermissionRationale(CategoryListActivity.this,
+                    Manifest.permission.CAMERA) && ActivityCompat.shouldShowRequestPermissionRationale(CategoryListActivity.this,
+                    Manifest.permission.RECORD_AUDIO) && ActivityCompat.shouldShowRequestPermissionRationale(CategoryListActivity.this,
+                    Manifest.permission.ACCESS_FINE_LOCATION))
             {
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
@@ -174,7 +180,11 @@ public class CategoryListActivity extends AppCompatActivity
             {
                 // No explanation needed; request the permission
                 ActivityCompat.requestPermissions(CategoryListActivity.this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.CAMERA,
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.RECORD_AUDIO},
                         MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
 
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an

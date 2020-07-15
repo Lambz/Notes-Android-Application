@@ -93,31 +93,42 @@
         android:id="@+id/delete_btn"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginLeft="80dp"
         android:background="@mipmap/delete_icon"
         android:backgroundTint="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/foler_btn" />
+        app:layout_constraintLeft_toRightOf="@id/foler_btn"
+        app:layout_constraintRight_toLeftOf="@id/camera_btn"/>
 
     <Button
         android:id="@+id/camera_btn"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginLeft="80dp"
         android:background="@mipmap/camera_icon"
         android:backgroundTint="@color/colorAccent"
         android:onClick="cameraClicked"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/delete_btn" />
+        app:layout_constraintLeft_toRightOf="@id/delete_btn"
+        app:layout_constraintRight_toLeftOf="@id/audio_btn"/>
 
     <Button
+        android:id="@+id/audio_btn"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/ic_baseline_mic_none_24"
+        android:backgroundTint="@color/colorAccent"
+        app:layout_constraintLeft_toRightOf="@id/camera_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/location_btn"/>
+
+    <Button
+        android:id="@+id/location_btn"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginLeft="80dp"
-        android:background="@mipmap/edit_icon"
+        android:background="@drawable/ic_baseline_mic_none_24"
         android:backgroundTint="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/camera_btn" />
+        app:layout_constraintRight_toRightOf="parent"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

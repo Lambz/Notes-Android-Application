@@ -8,8 +8,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.view.View;
@@ -22,14 +26,18 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.lambton.projects.note_wethree_android.R;
+import com.lambton.projects.note_wethree_android.dataHandler.entity.Note;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
 
 public class NoteDetailActivity extends AppCompatActivity {
 
@@ -47,6 +55,13 @@ public class NoteDetailActivity extends AppCompatActivity {
     private Bitmap mSelectedImage;
     private Animation mShakeAnimation;
     private Vibrator mVibrator;
+    private String mRecordedAudio;
+    private Button mAudioButton;
+    private boolean mIsRecorded = false;
+    private boolean mIsRecording = false;
+    private boolean mIsPlaying = false;
+    private MediaRecorder mMediaRecorder;
+    private MediaPlayer mMediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +80,13 @@ public class NoteDetailActivity extends AppCompatActivity {
         mDeleteButton = findViewById(R.id.delete_btn);
         mCameraButton = findViewById(R.id.camera_btn);
         mImageView = findViewById(R.id.imageview);
+        mAudioButton = findViewById(R.id.audio_btn);
+        mAudioButton.setOnLongClickListener(mAudioButtonLongClickListener);
+        mAudioButton.setOnClickListener(mAudioButtonClickListener);
+        if(mPosition == null)
+        {
+            mDeleteButton.setVisibility(View.GONE);
+        }
     }
 
     public void saveClicked(View view)
@@ -75,9 +97,10 @@ public class NoteDetailActivity extends AppCompatActivity {
             String description = mDescriptionEditText.getText().toString();
             if(title.isEmpty())
             {
-
+                shakeAndVibrate(mTitleEditText);
                 return;
             }
+            Note note = new Note(title,description,1);
             // Save New Note
         }
         else
@@ -178,5 +201,88 @@ public class NoteDetailActivity extends AppCompatActivity {
     {
         edittext.startAnimation(mShakeAnimation);
         mVibrator.vibrate(VIBRATION_PERIOD);
+    }
+
+    Button.OnLongClickListener mAudioButtonLongClickListener = new Button.OnLongClickListener()
+    {
+        @Override
+        public boolean onLongClick(View v)
+        {
+            return false;
+        }
+    };
+
+    Button.OnClickListener mAudioButtonClickListener = new Button.OnClickListener()
+    {
+
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+        @Override
+        public void onClick(View v)
+        {
+            if(mIsRecorded)
+            {
+                if(mIsPlaying)
+                {
+                    mMediaPlayer.stop();
+                    mMediaPlayer.release();
+                    Toast.makeText(NoteDetailActivity.this, "Stop Playing...", Toast.LENGTH_SHORT).show();
+                    mIsPlaying = false;
+                    mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_play_arrow_24));
+                }
+                else
+                {
+                    mMediaPlayer = new MediaPlayer();
+                    mMediaPlayer.setOnCompletionListener(mp -> mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_play_arrow_24)));
+                    try
+                    {
+                        mMediaPlayer.setDataSource(mRecordedAudio);
+                        mMediaPlayer.prepare();
+                        Toast.makeText(NoteDetailActivity.this, "Playing...", Toast.LENGTH_SHORT).show();
+                        mMediaPlayer.start();
+                    } catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+                    mIsPlaying = true;
+                    mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_pause_24));
+                }
+            }
+            else
+            {
+                if(mIsRecording)
+                {
+                    mMediaRecorder.stop();
+                    Toast.makeText(NoteDetailActivity.this, "Stop Recording...", Toast.LENGTH_SHORT).show();
+                    mIsRecorded = true;
+                    mIsRecording = false;
+                    mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_play_arrow_24));
+                }
+                else
+                {
+                    mRecordedAudio = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"+ UUID.randomUUID().toString()+"_audio_record.3gp";
+                    setupMediaRecorder();
+                    try
+                    {
+                        mMediaRecorder.prepare();
+                        Toast.makeText(NoteDetailActivity.this, "Recording...", Toast.LENGTH_SHORT).show();
+                        mMediaRecorder.start();
+                        mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_mic_24));
+                    } catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+                    mIsRecording = true;
+                }
+            }
+        }
+    };
+
+    private void setupMediaRecorder()
+    {
+        mMediaRecorder = new MediaRecorder();
+        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
+        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mMediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+        mMediaRecorder.setOutputFile(mRecordedAudio);
     }
 }
