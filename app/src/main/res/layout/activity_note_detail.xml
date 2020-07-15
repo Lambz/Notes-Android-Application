@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".activities.NoteDetailActivity"
     android:padding="20dp">
+    <Button
+        android:id="@+id/backBtn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@android:drawable/ic_menu_revert"
+        android:text="Back"
+        android:backgroundTint="@color/colorAccent"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/title"
@@ -19,6 +31,21 @@
         app:layout_constraintTop_toTopOf="parent">
 
     </TextView>
+    <Button
+        android:id="@+id/saveBtn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@android:drawable/ic_menu_revert"
+        android:text="Save"
+        android:backgroundTint="@color/colorAccent"
+        app:layout_constraintLeft_toRightOf="@id/title"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/notes_detail_title"
+
+       />
 
     <EditText
         android:id="@+id/notes_detail_title"
