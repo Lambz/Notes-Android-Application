@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 
 import java.io.Serializable;
@@ -23,7 +24,7 @@ public class Note implements Serializable {
     private String noteTitle;
     private String noteDescription;
     @NonNull
-    private java.util.Date noteCreatedDate;
+    private Date noteCreatedDate;
     private String noteAudio;
     @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
     private byte[] noteImage;
@@ -97,7 +98,7 @@ public class Note implements Serializable {
         return noteDescription;
     }
 
-    public java.util.Date getNoteCreatedDate() {
+    public Date getNoteCreatedDate() {
         return noteCreatedDate;
     }
 

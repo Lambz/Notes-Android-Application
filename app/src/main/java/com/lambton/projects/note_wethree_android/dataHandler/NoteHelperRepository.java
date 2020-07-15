@@ -148,8 +148,7 @@ public class NoteHelperRepository {
 
         @Override
         protected List<Note> doInBackground(Integer... integers) {
-            List<Note> noteList = noteDataInterface.getAllNotesForCategory(integers[0].intValue());
-            return noteList;
+            return noteDataInterface.getAllNotesForCategory(integers[0]);
         }
     }
 
@@ -163,8 +162,7 @@ public class NoteHelperRepository {
 
         @Override
         protected List<Note> doInBackground(Integer... integers) {
-            List<Note> noteList = noteDataInterface.getSortedNotesByDate(integers[0].intValue());
-            return noteList;
+            return noteDataInterface.getSortedNotesByDate(integers[0]);
         }
     }
 

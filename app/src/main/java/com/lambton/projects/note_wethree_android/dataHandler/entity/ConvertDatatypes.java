@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory;
 import androidx.room.TypeConverter;
 
 import java.io.ByteArrayOutputStream;
-import java.sql.Date;
+import java.util.Date;
 
 public class ConvertDatatypes {
 
