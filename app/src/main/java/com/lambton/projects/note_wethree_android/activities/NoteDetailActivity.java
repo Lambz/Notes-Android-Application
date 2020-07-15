@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
 import android.provider.MediaStore;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -66,6 +67,7 @@ public class NoteDetailActivity extends AppCompatActivity
     private Button mFolderButton;
     private ImageView mImageView;
     private TextView mCreatedOnTextView;
+    private TextView mNoteTopTextView;
 
     private Bitmap mSelectedImage;
     private Animation mShakeAnimation;
@@ -93,20 +95,23 @@ public class NoteDetailActivity extends AppCompatActivity
 
     private void setData()
     {
+        mNoteTopTextView.setText("Update Note");
         mTitleEditText.setText(mNote.getNoteTitle());
         mDescriptionEditText.setText(mNote.getNoteDescription());
-        if(mNote.getNoteImageAsBitmap() != null)
+        if (mNote.getNoteImageAsBitmap() != null)
         {
             mImageView.setVisibility(View.VISIBLE);
             mSelectedImage = mNote.getNoteImageAsBitmap();
             mImageView.setImageBitmap(mSelectedImage);
         }
-        if(!mNote.getNoteAudio().isEmpty())
+        if (mNote.getNoteAudio() != null && !mNote.getNoteAudio().isEmpty())
         {
             mRecordedAudio = mNote.getNoteAudio();
             mIsRecorded = true;
             mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_play_arrow_24));
         }
+        DateFormat df = new DateFormat();
+        mCreatedOnTextView.setText("Created on "+df.format("EEE, MM-dd-yyyy hh:mm",mNote.getNoteCreatedDate()));
     }
 
     private void saveMemberVariables()
@@ -117,6 +122,7 @@ public class NoteDetailActivity extends AppCompatActivity
         mShakeAnimation = AnimationUtils.loadAnimation(NoteDetailActivity.this, R.anim.shake);
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         mImageView = findViewById(R.id.imageview);
+        mNoteTopTextView = findViewById(R.id.note_top_textview);
         mTitleEditText = findViewById(R.id.notes_detail_title);
         mDescriptionEditText = findViewById(R.id.notes_detail_desc);
         mCreatedOnTextView = findViewById(R.id.created_on_textview);
@@ -143,30 +149,30 @@ public class NoteDetailActivity extends AppCompatActivity
 
     public void saveClicked(View view)
     {
+        String title = mTitleEditText.getText().toString();
+        String description = mDescriptionEditText.getText().toString();
+        if (title.isEmpty())
+        {
+            shakeAndVibrate(mTitleEditText);
+            return;
+        }
         if (mNote == null)
         {
-            String title = mTitleEditText.getText().toString();
-            String description = mDescriptionEditText.getText().toString();
-            if (title.isEmpty())
-            {
-                shakeAndVibrate(mTitleEditText);
-                return;
-            }
             Location location = null;
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             {
                 location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             }
-            Note note = new Note(title,description,mCategory.getId());
-            if(mIsRecorded)
+            Note note = new Note(title, description, mCategory.getId());
+            if (mIsRecorded)
             {
                 note.setNoteAudio(mRecordedAudio);
             }
-            if(mSelectedImage != null)
+            if (mSelectedImage != null)
             {
                 note.setNoteImageAsBitmap(mSelectedImage);
             }
-            if(location != null)
+            if (location != null)
             {
                 note.setNoteLatitude(location.getLatitude());
                 note.setNoteLongitude(location.getLongitude());
@@ -174,11 +180,20 @@ public class NoteDetailActivity extends AppCompatActivity
             Utils.dump(note);
             mNoteHelperRepository.insertNewNoteInDatabase(note);
             finish();
-            // Save New Note
-        }
-        else
+        } else
         {
-            // Update Existing Note
+            mNote.setNoteTitle(title);
+            mNote.setNoteDescription(description);
+            if (mIsRecorded)
+            {
+                mNote.setNoteAudio(mRecordedAudio);
+            }
+            if (mSelectedImage != null)
+            {
+                mNote.setNoteImageAsBitmap(mSelectedImage);
+            }
+            mNoteHelperRepository.updateNoteInDatabase(mNote);
+            finish();
         }
     }
 
@@ -273,6 +288,7 @@ public class NoteDetailActivity extends AppCompatActivity
 
     public void backClicked(View view)
     {
+        finish();
     }
 
     private void shakeAndVibrate(EditText edittext)
@@ -297,17 +313,16 @@ public class NoteDetailActivity extends AppCompatActivity
         @Override
         public void onClick(View v)
         {
-            if(mIsRecorded)
+            if (mIsRecorded)
             {
-                if(mIsPlaying)
+                if (mIsPlaying)
                 {
                     mMediaPlayer.stop();
                     mMediaPlayer.release();
                     Toast.makeText(NoteDetailActivity.this, "Stop Playing...", Toast.LENGTH_SHORT).show();
                     mIsPlaying = false;
                     mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_play_arrow_24));
-                }
-                else
+                } else
                 {
                     mMediaPlayer = new MediaPlayer();
                     mMediaPlayer.setOnCompletionListener(mp -> mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_play_arrow_24)));
@@ -324,20 +339,18 @@ public class NoteDetailActivity extends AppCompatActivity
                     mIsPlaying = true;
                     mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_pause_24));
                 }
-            }
-            else
+            } else
             {
-                if(mIsRecording)
+                if (mIsRecording)
                 {
                     mMediaRecorder.stop();
                     Toast.makeText(NoteDetailActivity.this, "Stop Recording...", Toast.LENGTH_SHORT).show();
                     mIsRecorded = true;
                     mIsRecording = false;
                     mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_play_arrow_24));
-                }
-                else
+                } else
                 {
-                    mRecordedAudio = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"+ UUID.randomUUID().toString()+"_audio_record.3gp";
+                    mRecordedAudio = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + UUID.randomUUID().toString() + "_audio_record.3gp";
                     setupMediaRecorder();
                     try
                     {

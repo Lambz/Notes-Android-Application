@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
+    android:padding="5dp"
     tools:context=".activities.NoteDetailActivity">
 
     <Button
@@ -31,10 +31,10 @@
 
     <Button
         android:id="@+id/saveBtn"
-        android:layout_width="wrap_content"
+        android:layout_width="45dp"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:gravity="right|center_vertical"
+        android:gravity="center"
         android:onClick="saveClicked"
         android:text="Save"
         android:textColor="@color/colorAccent"
@@ -42,102 +42,109 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/note_top_textview" />
 
-    <EditText
-        android:id="@+id/notes_detail_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@android:color/transparent"
-        android:hint="Title"
-        android:textSize="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/note_top_textview" />
-
-
-    <EditText
-        android:id="@+id/notes_detail_desc"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"
-        android:background="@android:color/transparent"
-        android:gravity="top"
-        android:hint="Description"
-        android:inputType="textMultiLine"
-        app:layout_constraintBottom_toTopOf="@id/imageview"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/notes_detail_title" />
-
-    <ImageView
-        android:id="@+id/imageview"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginBottom="10dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/created_on_textview"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
-    <TextView
-        android:id="@+id/created_on_textview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:text="Created On"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@id/camera_btn" />
-
-    <Button
-        android:id="@+id/foler_btn"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@mipmap/folder"
-        android:backgroundTint="@color/colorAccent"
+        app:layout_constraintTop_toBottomOf="@id/note_top_textview"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        android:padding="5dp">
 
-    <Button
-        android:id="@+id/delete_btn"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@mipmap/delete_icon"
-        android:backgroundTint="@color/colorAccent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/foler_btn"
-        app:layout_constraintRight_toLeftOf="@id/camera_btn" />
+        <EditText
+            android:id="@+id/notes_detail_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/transparent"
+            android:hint="Title"
+            android:textSize="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-    <Button
-        android:id="@+id/camera_btn"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@mipmap/camera_icon"
-        android:backgroundTint="@color/colorAccent"
-        android:onClick="cameraClicked"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/delete_btn"
-        app:layout_constraintRight_toLeftOf="@id/audio_btn" />
 
-    <Button
-        android:id="@+id/audio_btn"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@drawable/ic_baseline_mic_none_24"
-        android:backgroundTint="@color/colorAccent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/camera_btn"
-        app:layout_constraintRight_toLeftOf="@id/location_btn" />
+        <EditText
+            android:id="@+id/notes_detail_desc"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@android:color/transparent"
+            android:gravity="top"
+            android:hint="Description"
+            android:inputType="textMultiLine"
+            app:layout_constraintBottom_toTopOf="@id/imageview"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/notes_detail_title" />
 
-    <Button
-        android:id="@+id/location_btn"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginLeft="80dp"
-        android:background="@drawable/ic_baseline_location_on_24"
-        android:backgroundTint="@color/colorAccent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        <ImageView
+            android:id="@+id/imageview"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginBottom="10dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/created_on_textview"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
+        <TextView
+            android:id="@+id/created_on_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="Created On"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@id/camera_btn" />
+
+        <Button
+            android:id="@+id/foler_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@mipmap/folder"
+            android:backgroundTint="@color/colorAccent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <Button
+            android:id="@+id/delete_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@mipmap/delete_icon"
+            android:backgroundTint="@color/colorAccent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/foler_btn"
+            app:layout_constraintRight_toLeftOf="@id/camera_btn" />
+
+        <Button
+            android:id="@+id/camera_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@mipmap/camera_icon"
+            android:backgroundTint="@color/colorAccent"
+            android:onClick="cameraClicked"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/delete_btn"
+            app:layout_constraintRight_toLeftOf="@id/audio_btn" />
+
+        <Button
+            android:id="@+id/audio_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_baseline_mic_none_24"
+            android:backgroundTint="@color/colorAccent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/camera_btn"
+            app:layout_constraintRight_toLeftOf="@id/location_btn" />
+
+        <Button
+            android:id="@+id/location_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="80dp"
+            android:background="@drawable/ic_baseline_location_on_24"
+            android:backgroundTint="@color/colorAccent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
