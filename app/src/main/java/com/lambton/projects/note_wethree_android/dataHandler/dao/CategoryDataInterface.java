@@ -25,5 +25,8 @@ public interface CategoryDataInterface {
     @Transaction
     @Query("SELECT * FROM category_data")
     List<Category> loadAllCategories();
+    @Transaction
+    @Query("SELECT * FROM category_data ORDER BY categoryName ASC")
+    List<Category> loadAllCategoriesSortedByTitle();
 
 }

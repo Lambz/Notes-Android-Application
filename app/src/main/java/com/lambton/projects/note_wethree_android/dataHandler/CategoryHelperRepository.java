@@ -24,6 +24,8 @@ import java.util.concurrent.ExecutionException;
 
     public List<Category> getAllCategories();
 
+    public List<Category> getAllCategoriesSortedByTitle()
+
  */
 
 
@@ -51,6 +53,19 @@ public class CategoryHelperRepository {
         List<Category> categoryList = new ArrayList<>();
         try {
             categoryList = new CategoryHelperRepository.FetchAllCategories(categoryDataInterface).execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return categoryList;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public List<Category> getAllCategoriesSortedByTitle() {
+        List<Category> categoryList = new ArrayList<>();
+        try {
+            categoryList = new CategoryHelperRepository.FetchAllCategoriesSortedByTitle(categoryDataInterface).execute().get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -93,6 +108,21 @@ public class CategoryHelperRepository {
         @Override
         protected List<Category> doInBackground(Void... voids) {
             return categoryDataInterface.loadAllCategories();
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private static class FetchAllCategoriesSortedByTitle extends AsyncTask<Void, Void, List<Category>> {
+
+        private CategoryDataInterface categoryDataInterface;
+
+        private FetchAllCategoriesSortedByTitle(CategoryDataInterface categoryDataInterface) {
+            this.categoryDataInterface = categoryDataInterface;
+        }
+
+        @Override
+        protected List<Category> doInBackground(Void... voids) {
+            return categoryDataInterface.loadAllCategoriesSortedByTitle();
         }
     }
 
