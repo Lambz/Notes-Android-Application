@@ -11,6 +11,10 @@ import java.util.Date;
 public class ConvertDatatypes {
 
     public static byte[] convertBitmapToByteArray(Bitmap bitmap) {
+        if(bitmap == null)
+        {
+            return null;
+        }
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 0, byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
