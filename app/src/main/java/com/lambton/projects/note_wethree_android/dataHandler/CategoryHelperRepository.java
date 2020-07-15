@@ -12,7 +12,6 @@ import com.lambton.projects.note_wethree_android.dataHandler.dao.NoteDataInterfa
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
