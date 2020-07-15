@@ -76,7 +76,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>
         holder.mConstraintLayout.setOnClickListener(v ->
         {
             Intent intent = new Intent(mContext, NoteDetailActivity.class);
-//            intent.putExtra("category",mCategoryList.get(position));
+            intent.putExtra("note",mNoteList.get(position));
             mContext.startActivity(intent);
         });
     }

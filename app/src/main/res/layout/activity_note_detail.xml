@@ -87,7 +87,7 @@
         android:layout_marginBottom="10dp"
         android:text="Created On"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@id/foler_btn" />
+        app:layout_constraintBottom_toTopOf="@id/camera_btn" />
 
     <Button
         android:id="@+id/foler_btn"

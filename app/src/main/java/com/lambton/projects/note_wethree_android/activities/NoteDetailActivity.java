@@ -25,6 +25,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -37,6 +38,7 @@ import androidx.core.content.ContextCompat;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.lambton.projects.note_wethree_android.R;
 import com.lambton.projects.note_wethree_android.Utils;
+import com.lambton.projects.note_wethree_android.dataHandler.NoteHelperRepository;
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Note;
 
@@ -63,6 +65,7 @@ public class NoteDetailActivity extends AppCompatActivity
     private Button mLocationButton;
     private Button mFolderButton;
     private ImageView mImageView;
+    private TextView mCreatedOnTextView;
 
     private Bitmap mSelectedImage;
     private Animation mShakeAnimation;
@@ -77,6 +80,7 @@ public class NoteDetailActivity extends AppCompatActivity
     private LocationManager mLocationManager;
     private Category mCategory;
     private Note mNote;
+    private NoteHelperRepository mNoteHelperRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -84,31 +88,56 @@ public class NoteDetailActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_detail);
         saveMemberVariables();
+        setData();
+    }
+
+    private void setData()
+    {
+        mTitleEditText.setText(mNote.getNoteTitle());
+        mDescriptionEditText.setText(mNote.getNoteDescription());
+        if(mNote.getNoteImageAsBitmap() != null)
+        {
+            mImageView.setVisibility(View.VISIBLE);
+            mSelectedImage = mNote.getNoteImageAsBitmap();
+            mImageView.setImageBitmap(mSelectedImage);
+        }
+        if(!mNote.getNoteAudio().isEmpty())
+        {
+            mRecordedAudio = mNote.getNoteAudio();
+            mIsRecorded = true;
+            mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_play_arrow_24));
+        }
     }
 
     private void saveMemberVariables()
     {
+        mNoteHelperRepository = new NoteHelperRepository(this.getApplication());
         mNote = (Note) getIntent().getSerializableExtra("note");
         mCategory = (Category) getIntent().getSerializableExtra("category");
         mShakeAnimation = AnimationUtils.loadAnimation(NoteDetailActivity.this, R.anim.shake);
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        mImageView = findViewById(R.id.imageview);
         mTitleEditText = findViewById(R.id.notes_detail_title);
         mDescriptionEditText = findViewById(R.id.notes_detail_desc);
+        mCreatedOnTextView = findViewById(R.id.created_on_textview);
+        mFolderButton = findViewById(R.id.foler_btn);
         mDeleteButton = findViewById(R.id.delete_btn);
         mCameraButton = findViewById(R.id.camera_btn);
-        mImageView = findViewById(R.id.imageview);
+        mLocationButton = findViewById(R.id.location_btn);
         mAudioButton = findViewById(R.id.audio_btn);
         mAudioButton.setOnLongClickListener(mAudioButtonLongClickListener);
         mAudioButton.setOnClickListener(mAudioButtonClickListener);
         if (mNote == null)
         {
             mDeleteButton.setVisibility(View.GONE);
+            mLocationButton.setVisibility(View.GONE);
+            mFolderButton.setVisibility(View.GONE);
+            mCreatedOnTextView.setVisibility(View.GONE);
         }
         mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
             requestLocationPermission();
-            return;
         }
     }
 
@@ -137,13 +166,14 @@ public class NoteDetailActivity extends AppCompatActivity
             {
                 note.setNoteImageAsBitmap(mSelectedImage);
             }
-//            note.setNoteCreatedDate(new Date());
             if(location != null)
             {
                 note.setNoteLatitude(location.getLatitude());
                 note.setNoteLongitude(location.getLongitude());
             }
             Utils.dump(note);
+            mNoteHelperRepository.insertNewNoteInDatabase(note);
+            finish();
             // Save New Note
         }
         else

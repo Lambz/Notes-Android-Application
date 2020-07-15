@@ -17,6 +17,10 @@ public class ConvertDatatypes {
     }
 
     public static Bitmap convertByteArrayToBitmap(byte[] bytes) {
+        if(bytes == null)
+        {
+            return null;
+        }
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     }
 
