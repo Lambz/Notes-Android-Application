@@ -143,6 +143,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginLeft="80dp"
+            android:onClick="locationClicked"
             android:background="@drawable/ic_baseline_location_on_24"
             android:backgroundTint="@color/colorAccent"
             app:layout_constraintBottom_toBottomOf="parent"

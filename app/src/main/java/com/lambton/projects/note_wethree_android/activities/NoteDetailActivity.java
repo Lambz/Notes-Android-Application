@@ -460,4 +460,12 @@ public class NoteDetailActivity extends AppCompatActivity
         mNote.setNoteImageAsBitmap(null);
         mNoteHelperRepository.updateNoteInDatabase(mNote);
     }
+
+    public void locationClicked(View view)
+    {
+        Intent intent = new Intent(NoteDetailActivity.this, MapsActivity.class);
+        intent.putExtra("lat",mNote.getNoteLatitude());
+        intent.putExtra("long",mNote.getNoteLongitude());
+        startActivity(intent);
+    }
 }
