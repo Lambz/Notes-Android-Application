@@ -19,6 +19,7 @@ import com.lambton.projects.note_wethree_android.dataHandler.CategoryHelperRepos
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolder>
@@ -27,11 +28,13 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     private static final String TAG = "CategoriesAdapter";
     private Context mContext;
     private List<Category> mCategoryList;
+    private HashMap<Integer,Integer> mCategoryCount;
 
-    public CategoriesAdapter(Context context, List<Category> categoryList)
+    public CategoriesAdapter(Context context, List<Category> categoryList, HashMap<Integer, Integer> categoryCount)
     {
         this.mContext = context;
         this.mCategoryList = categoryList;
+        this.mCategoryCount = categoryCount;
     }
 
 
@@ -50,7 +53,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     {
         final Category category = mCategoryList.get(position);
         holder.mTitleTextView.setText(category.getCategoryName());
-        holder.mNumNotesTextView.setText(1 + "");
+        holder.mNumNotesTextView.setText(String.valueOf(mCategoryCount.get(category.getId())));
         holder.mConstraintLayout.setOnClickListener(v ->
         {
             Intent intent = new Intent(mContext, NotesListActivity.class);

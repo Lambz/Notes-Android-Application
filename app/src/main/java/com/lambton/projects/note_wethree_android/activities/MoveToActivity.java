@@ -63,4 +63,10 @@ public class MoveToActivity extends AppCompatActivity implements AdapterView.OnI
         setResult(RESULT_OK,intent);
         finish();
     }
+
+    public void cancelClicked(View view)
+    {
+        setResult(RESULT_CANCELED);
+        finish();
+    }
 }

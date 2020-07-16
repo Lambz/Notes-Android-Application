@@ -34,6 +34,7 @@ import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -50,6 +51,7 @@ public class CategoryListActivity extends AppCompatActivity
     private List<Category> mCategoryList = new ArrayList<>();
     private SearchView mSearchView;
     private int mSelectedSort = R.id.title_asc_radio;
+    private HashMap<Integer, Integer> mCategoryCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -79,11 +81,20 @@ public class CategoryListActivity extends AppCompatActivity
     private void getCategories()
     {
         mCategoryList = mCategoryHelperRepository.getAllCategoriesSortedByTitle();
+        mCategoryCount = new HashMap<>();
+        for(Category category: mCategoryList)
+        {
+            mCategoryCount.put(category.getId(),mCategoryHelperRepository.getNoteCountForCategory(category.getId()));
+        }
+        /*for(Integer key: mCategoryCount.keySet())
+        {
+            System.out.println(key+" : "+mCategoryCount.get(key).intValue());
+        }*/
     }
 
     private void setRecyclerViewData()
     {
-        mCategoriesAdapter = new CategoriesAdapter(this,mCategoryList);
+        mCategoriesAdapter = new CategoriesAdapter(this,mCategoryList,mCategoryCount);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mCategoriesAdapter);
