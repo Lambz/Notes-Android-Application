@@ -508,7 +508,7 @@ public class NoteDetailActivity extends AppCompatActivity
     {
         Intent intent = new Intent(NoteDetailActivity.this, MapsActivity.class);
         intent.putExtra("lat", mNote.getNoteLatitude());
-        intent.putExtra("long", mNote.getNoteLongitude());
+        intent.putExtra("lng", mNote.getNoteLongitude());
         startActivity(intent);
     }
 
