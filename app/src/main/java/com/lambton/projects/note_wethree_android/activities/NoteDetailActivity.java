@@ -18,7 +18,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.FileUtils;
 import android.os.Vibrator;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.format.DateFormat;
 import android.view.View;
@@ -47,7 +49,11 @@ import com.lambton.projects.note_wethree_android.dataHandler.entity.Note;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -101,7 +107,7 @@ public class NoteDetailActivity extends AppCompatActivity
 
     private void setData()
     {
-        if(mNote == null)
+        if (mNote == null)
         {
             return;
         }
@@ -121,7 +127,7 @@ public class NoteDetailActivity extends AppCompatActivity
             mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_play_arrow_24));
         }
         DateFormat df = new DateFormat();
-        mCreatedOnTextView.setText("Created on "+df.format("EEE, MM-dd-yyyy hh:mm",mNote.getNoteCreatedDate()));
+        mCreatedOnTextView.setText("Created on " + df.format("EEE, MM-dd-yyyy hh:mm", mNote.getNoteCreatedDate()));
     }
 
     private void saveMemberVariables()
@@ -191,7 +197,7 @@ public class NoteDetailActivity extends AppCompatActivity
                 note.setNoteLongitude(location.getLongitude());
             }
 //            Utils.dump(note);
-            if(note == null)
+            if (note == null)
             {
                 System.out.println("note is null now");
             }
@@ -201,14 +207,8 @@ public class NoteDetailActivity extends AppCompatActivity
             System.out.println("mNote not null");
             mNote.setNoteTitle(title);
             mNote.setNoteDescription(description);
-            if (mIsRecorded)
-            {
-                mNote.setNoteAudio(mRecordedAudio);
-            }
-            if (mSelectedImage != null)
-            {
-                mNote.setNoteImageAsBitmap(mSelectedImage);
-            }
+            mNote.setNoteAudio(mRecordedAudio);
+            mNote.setNoteImageAsBitmap(mSelectedImage);
             mNoteHelperRepository.updateNoteInDatabase(mNote);
         }
         finish();
@@ -289,8 +289,7 @@ public class NoteDetailActivity extends AppCompatActivity
                 mSelectedImage = bitmap;
                 mImageView.setImageBitmap(bitmap);
             }
-        }
-        else if (requestCode == GALLERY_REQUEST_CODE)
+        } else if (requestCode == GALLERY_REQUEST_CODE)
         {
             if (resultCode == RESULT_OK && data != null && data.getData() != null)
             {
@@ -300,18 +299,40 @@ public class NoteDetailActivity extends AppCompatActivity
                 mSelectedImage = bitmap;
                 mImageView.setImageBitmap(bitmap);
             }
-        }
-        else if(requestCode == GET_AUDIO_REQUEST_CODE)
+        } else if (requestCode == GET_AUDIO_REQUEST_CODE)
         {
-            if(resultCode == RESULT_OK){
+            if (resultCode == RESULT_OK)
+            {
 
                 Uri uri = data.getData();
                 mIsRecorded = true;
-                mRecordedAudio = uri.toString();
-                mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_play_arrow_24));
+                try
+                {
+                    InputStream inputStream = getContentResolver().openInputStream(uri);
+                    File file = new File(NoteDetailActivity.this.getFilesDir().getPath() + "/" + UUID.randomUUID().toString() + "_audio_record.3gp");
+                    System.out.println(file.getAbsolutePath());
+                    if (file.createNewFile())
+                    {
+                        byte[] buffer = new byte[inputStream.available()];
+                        inputStream.read(buffer);
+                        OutputStream outputStream = new FileOutputStream(file);
+                        outputStream.write(buffer);
+                        mRecordedAudio = file.getAbsolutePath();
+                        System.out.println(mRecordedAudio);
+//                        mRecordedAudio = uri.toString();
+                        mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_play_arrow_24));
+                    }
+                } catch (FileNotFoundException e)
+                {
+                    e.printStackTrace();
+                } catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
             }
         }
     }
+
 
     public void backClicked(View view)
     {
@@ -326,16 +347,15 @@ public class NoteDetailActivity extends AppCompatActivity
 
     Button.OnLongClickListener mAudioButtonLongClickListener = v ->
     {
-        if(mIsRecorded)
+        if (mIsRecorded)
         {
             showRemoveAudioAlert();
-        }
-        else
+        } else
         {
             Intent intent_upload = new Intent();
             intent_upload.setType("audio/*");
             intent_upload.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(intent_upload,GET_AUDIO_REQUEST_CODE);
+            startActivityForResult(intent_upload, GET_AUDIO_REQUEST_CODE);
         }
         return false;
     };
@@ -352,7 +372,6 @@ public class NoteDetailActivity extends AppCompatActivity
                 if (mIsPlaying)
                 {
                     mMediaPlayer.stop();
-                    mMediaPlayer.release();
                     Toast.makeText(NoteDetailActivity.this, "Stop Playing...", Toast.LENGTH_SHORT).show();
                     mIsPlaying = false;
                     mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_play_arrow_24));
@@ -362,25 +381,16 @@ public class NoteDetailActivity extends AppCompatActivity
                     mMediaPlayer.setOnCompletionListener(mp -> mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_play_arrow_24)));
                     try
                     {
-                        if(mRecordedAudio.substring(0,7).equals("content"))
-                        {
-                            Uri uri = Uri.parse(mRecordedAudio);
-                            System.out.println(uri.toString());
-                            mMediaPlayer.setDataSource(NoteDetailActivity.this,uri);
-                        }
-                        else
-                        {
-                            mMediaPlayer.setDataSource(mRecordedAudio);
-                        }
+                        mMediaPlayer.setDataSource(mRecordedAudio);
                         mMediaPlayer.prepare();
                         Toast.makeText(NoteDetailActivity.this, "Playing...", Toast.LENGTH_SHORT).show();
                         mMediaPlayer.start();
+                        mIsPlaying = true;
+                        mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_pause_24));
                     } catch (IOException e)
                     {
                         e.printStackTrace();
                     }
-                    mIsPlaying = true;
-                    mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_pause_24));
                 }
             } else
             {
@@ -427,8 +437,8 @@ public class NoteDetailActivity extends AppCompatActivity
 
     public void moveToClicked(View view)
     {
-        Intent intent = new Intent(this,MoveToActivity.class);
-        startActivityForResult(intent,MOVE_TO_CATEGORY_REQUEST);
+        Intent intent = new Intent(this, MoveToActivity.class);
+        startActivityForResult(intent, MOVE_TO_CATEGORY_REQUEST);
     }
 
     public void showRemoveAudioAlert()
@@ -438,7 +448,7 @@ public class NoteDetailActivity extends AppCompatActivity
                 .setMessage("Are you sure you want to delete the audio recording?")
                 .setCancelable(true)
                 .setPositiveButton("Yes", (dialog, which) -> deleteRecording())
-                .setNegativeButton("No",(dialog, which) -> dialog.dismiss())
+                .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
                 .create().show();
     }
 
@@ -456,13 +466,13 @@ public class NoteDetailActivity extends AppCompatActivity
                 .setMessage("Are you sure you want to delete this note?")
                 .setCancelable(true)
                 .setPositiveButton("Yes", (dialog, which) -> deleteNote())
-                .setNegativeButton("No",(dialog, which) -> dialog.dismiss())
+                .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
                 .create().show();
     }
 
     private void deleteNote()
     {
-        if(mNote!=null)
+        if (mNote != null)
         {
             mNoteHelperRepository.deleteNoteFromDatabase(mNote);
         }
@@ -482,7 +492,7 @@ public class NoteDetailActivity extends AppCompatActivity
                 .setMessage("Are you sure you want to delete this Image?")
                 .setCancelable(true)
                 .setPositiveButton("Yes", (dialog, which) -> deleteImage())
-                .setNegativeButton("No",(dialog, which) -> dialog.dismiss())
+                .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
                 .create().show();
     }
 
@@ -497,19 +507,19 @@ public class NoteDetailActivity extends AppCompatActivity
     public void locationClicked(View view)
     {
         Intent intent = new Intent(NoteDetailActivity.this, MapsActivity.class);
-        intent.putExtra("lat",mNote.getNoteLatitude());
-        intent.putExtra("long",mNote.getNoteLongitude());
+        intent.putExtra("lat", mNote.getNoteLatitude());
+        intent.putExtra("long", mNote.getNoteLongitude());
         startActivity(intent);
     }
 
     @Override
     protected void onStop()
     {
-        super.onStop();
-        if(mMediaPlayer != null && mMediaPlayer.isPlaying())
+        if (mMediaPlayer != null)
         {
             mMediaPlayer.stop();
             mMediaPlayer.release();
         }
+        super.onStop();
     }
 }
