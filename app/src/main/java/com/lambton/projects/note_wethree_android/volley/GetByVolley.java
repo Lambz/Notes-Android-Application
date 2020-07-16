@@ -44,30 +44,4 @@ public class GetByVolley {
             googleMap.addPolyline(polylineOptions);
         }
     }
-
-    public static void getNearbyPlaces(JSONObject jsonObject, GoogleMap googleMap)
-    {
-        List<HashMap<String, String>> nearbyPlaces = null;
-        VolleyParser dataParser = new VolleyParser();
-        nearbyPlaces = dataParser.parsePlace(jsonObject);
-        showNearbyPlaces(nearbyPlaces, googleMap);
-    }
-
-    private static void showNearbyPlaces(List<HashMap<String, String>> nearbyPlaces, GoogleMap googleMap) {
-        googleMap.clear();
-        for (HashMap<String,String> nearbyPlace: nearbyPlaces)
-        {
-            String placeName = nearbyPlace.get("place_name");
-            String vicinity = nearbyPlace.get("vicinity");
-            double lat = Double.parseDouble(nearbyPlace.get("latitude"));
-            double lng = Double.parseDouble(nearbyPlace.get("longitude"));
-            String reference = nearbyPlace.get("reference");
-
-            LatLng latLng = new LatLng(lat,lng);
-            MarkerOptions options = new MarkerOptions().position(latLng)
-                    .title(placeName)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-            googleMap.addMarker(options);
-        }
-    }
 }
