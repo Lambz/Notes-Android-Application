@@ -86,10 +86,6 @@ public class CategoryListActivity extends AppCompatActivity
         {
             mCategoryCount.put(category.getId(),mCategoryHelperRepository.getNoteCountForCategory(category.getId()));
         }
-        /*for(Integer key: mCategoryCount.keySet())
-        {
-            System.out.println(key+" : "+mCategoryCount.get(key).intValue());
-        }*/
     }
 
     private void setRecyclerViewData()
