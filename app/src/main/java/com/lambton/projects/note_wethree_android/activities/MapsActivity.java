@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -16,6 +17,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ToggleButton;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -46,6 +48,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private double mLat, mLng;
     private LocationManager mLocationManager;
     private Location mUserLocation;
+    private ToggleButton mToggleButton;
+    private String mMode = "Driving";
+    private int mStrokeColor = Color.RED;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -56,12 +61,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        setMemberVariables();
+        checkPermissions();
+    }
+
+    private void setMemberVariables()
+    {
+        mToggleButton = findViewById(R.id.toggleButton);
         Intent intent = getIntent();
         mLat = intent.getDoubleExtra("lat", 0);
         mLng = intent.getDoubleExtra("lng", 0);
         mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        checkPermissions();
-
     }
 
     /**
@@ -181,7 +191,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getDirectionURL(latLng), null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                GetByVolley.getDirection(response,mMap,location);
+                GetByVolley.getDirection(response,mMap,location,mStrokeColor);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -197,7 +207,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         URL.append("origin="+mUserLocation.getLatitude() + ","+ mUserLocation.getLongitude());
         URL.append("&destination="+latLng.latitude+","+latLng.longitude);
         URL.append("&key="+getString(R.string.google_maps_key));
+        URL.append("&mode="+mMode);
         System.out.println(URL);
         return URL.toString();
+    }
+
+    public void modeClicked(View view)
+    {
+        if(mToggleButton.isChecked())
+        {
+            mStrokeColor = Color.GREEN;
+            mMode = "Walking";
+        }
+        else
+        {
+            mStrokeColor = Color.RED;
+            mMode = "Driving";
+        }
     }
 }

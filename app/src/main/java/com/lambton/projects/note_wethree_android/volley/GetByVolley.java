@@ -17,7 +17,7 @@ import java.util.List;
 
 public class GetByVolley {
 
-    public static void getDirection(JSONObject jsonObject, GoogleMap googleMap, Location location)
+    public static void getDirection(JSONObject jsonObject, GoogleMap googleMap, Location location, int strokeColor)
     {
         HashMap<String, String> distances = null;
         VolleyParser directionParser = new VolleyParser();
@@ -25,10 +25,10 @@ public class GetByVolley {
         String distance = distances.get("distance");
         String duration = distances.get("duration");
         String [] directionsList = directionParser.parseDirections(jsonObject);
-        displayDirections(directionsList, distance, duration, googleMap, location);
+        displayDirections(directionsList, distance, duration, googleMap, location, strokeColor);
     }
 
-    private static void displayDirections(String[] directionsList, String distance, String duration, GoogleMap googleMap, Location location) {
+    private static void displayDirections(String[] directionsList, String distance, String duration, GoogleMap googleMap, Location location, int strokeColor) {
         googleMap.clear();
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         MarkerOptions options = new MarkerOptions().position(latLng)
@@ -39,7 +39,7 @@ public class GetByVolley {
         for(String direction: directionsList)
         {
             PolylineOptions polylineOptions = new PolylineOptions()
-                    .color(Color.RED)
+                    .color(strokeColor)
                     .width(10)
                     .addAll(PolyUtil.decode(direction));
             googleMap.addPolyline(polylineOptions);
