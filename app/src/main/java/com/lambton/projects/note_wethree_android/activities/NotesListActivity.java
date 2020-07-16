@@ -159,20 +159,13 @@ public class NotesListActivity extends AppCompatActivity
             int position = viewHolder.getAdapterPosition();
             if (direction == ItemTouchHelper.LEFT)
             {
-                AtomicBoolean delete = new AtomicBoolean(true);
                 Note note = mNotesAdapter.deleteItem(position);
+                mNoteHelperRepository.deleteNoteFromDatabase(note);
                 Snackbar.make(mRecyclerView, note.getNoteTitle(), Snackbar.LENGTH_LONG).setAction("Undo", v ->
                 {
                     mNotesAdapter.addItem(note, position);
-                    delete.set(false);
+                    mNoteHelperRepository.insertNewNoteInDatabase(note);
                 }).show();
-                new Handler().postDelayed(() ->
-                {
-                    if (delete.get())
-                    {
-                        //Delete Category
-                    }
-                }, 3000);
             } else if (direction == ItemTouchHelper.RIGHT)
             {
                 mNotesToMove = new ArrayList<>();
