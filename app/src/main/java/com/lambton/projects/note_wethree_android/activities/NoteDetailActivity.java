@@ -331,6 +331,13 @@ public class NoteDetailActivity extends AppCompatActivity
                 }
             }
         }
+        if (requestCode == MOVE_TO_CATEGORY_REQUEST)
+        {
+            Category category = (Category) data.getSerializableExtra("category");
+            mNote.setNoteCategoryId(category.getId());
+            mNoteHelperRepository.updateNoteInDatabase(mNote);
+            finish();
+        }
     }
 
 

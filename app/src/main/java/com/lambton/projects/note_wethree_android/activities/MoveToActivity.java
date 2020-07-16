@@ -47,7 +47,7 @@ public class MoveToActivity extends AppCompatActivity implements AdapterView.OnI
 
     private void getCategories()
     {
-        mCategoryList = mCategoryHelperRepository.getAllCategories();
+        mCategoryList = mCategoryHelperRepository.getAllCategoriesSortedByTitle();
     }
 
     private void setListViewData()
