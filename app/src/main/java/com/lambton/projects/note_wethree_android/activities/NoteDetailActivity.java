@@ -155,6 +155,7 @@ public class NoteDetailActivity extends AppCompatActivity
 
     public void saveClicked(View view)
     {
+        System.out.println("saved clicked");
         String title = mTitleEditText.getText().toString();
         String description = mDescriptionEditText.getText().toString();
         if (title.isEmpty())
@@ -164,6 +165,7 @@ public class NoteDetailActivity extends AppCompatActivity
         }
         if (mNote == null)
         {
+            System.out.println("mNote null");
             Location location = null;
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             {
@@ -183,11 +185,15 @@ public class NoteDetailActivity extends AppCompatActivity
                 note.setNoteLatitude(location.getLatitude());
                 note.setNoteLongitude(location.getLongitude());
             }
-            Utils.dump(note);
+//            Utils.dump(note);
+            if(note == null)
+            {
+                System.out.println("note is null now");
+            }
             mNoteHelperRepository.insertNewNoteInDatabase(note);
-            finish();
         } else
         {
+            System.out.println("mNote not null");
             mNote.setNoteTitle(title);
             mNote.setNoteDescription(description);
             if (mIsRecorded)
@@ -199,8 +205,8 @@ public class NoteDetailActivity extends AppCompatActivity
                 mNote.setNoteImageAsBitmap(mSelectedImage);
             }
             mNoteHelperRepository.updateNoteInDatabase(mNote);
-            finish();
         }
+        finish();
     }
 
     private void requestLocationPermission()

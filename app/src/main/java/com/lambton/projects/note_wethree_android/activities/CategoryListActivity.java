@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -48,8 +49,7 @@ public class CategoryListActivity extends AppCompatActivity
     private CategoryHelperRepository mCategoryHelperRepository;
     private List<Category> mCategoryList = new ArrayList<>();
     private SearchView mSearchView;
-    private TextView mSortTextView;
-    private int mSort = 0;
+    private int mSelectedSort = R.id.title_asc_radio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -66,7 +66,6 @@ public class CategoryListActivity extends AppCompatActivity
         mRecyclerView = findViewById(R.id.recycler_view);
         mSearchView = findViewById(R.id.search_view);
         mSearchView.setOnQueryTextListener(mQueryTextListener);
-        mSortTextView = findViewById(R.id.sort_textview);
     }
 
     @Override
@@ -79,7 +78,7 @@ public class CategoryListActivity extends AppCompatActivity
 
     private void getCategories()
     {
-        mCategoryList = mCategoryHelperRepository.getAllCategories();
+        mCategoryList = mCategoryHelperRepository.getAllCategoriesSortedByTitle();
     }
 
     private void setRecyclerViewData()
@@ -270,14 +269,7 @@ public class CategoryListActivity extends AppCompatActivity
 
     public void sortClicked(View view)
     {
-        switch (mSort)
-        {
-            case 0:
-                sortTitleDesc();
-                break;
-            case 1:
-                sortTitleAsc();
-        }
+        showSortAlert();
     }
 
     private void sortTitleAsc()
@@ -285,8 +277,6 @@ public class CategoryListActivity extends AppCompatActivity
         mCategoryList.sort((o1, o2) -> o1.getCategoryName().compareTo(o2.getCategoryName()));
         mCategoriesAdapter.setNewData(mCategoryList);
         mCategoriesAdapter.notifyDataSetChanged();
-        mSortTextView.setText("Title Asc");
-        mSort = 0;
     }
 
     private void sortTitleDesc()
@@ -294,7 +284,32 @@ public class CategoryListActivity extends AppCompatActivity
         mCategoryList.sort((o1, o2) -> -o1.getCategoryName().compareTo(o2.getCategoryName()));
         mCategoriesAdapter.setNewData(mCategoryList);
         mCategoriesAdapter.notifyDataSetChanged();
-        mSortTextView.setText("Title Desc");
-        mSort = 1;
+    }
+
+    private void showSortAlert()
+    {
+        final AlertDialog dialogBuilder = new AlertDialog.Builder(this).create();
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.custom_dialog_category_sort, null);
+
+        RadioGroup group = dialogView.findViewById(R.id.radio_group);
+        group.check(mSelectedSort);
+        group.setOnCheckedChangeListener((group1, checkedId) ->
+        {
+            switch (checkedId)
+            {
+                case R.id.title_asc_radio:
+                    sortTitleAsc();
+                    mSelectedSort = R.id.title_asc_radio;
+                    break;
+                case R.id.title_desc_radio:
+                    sortTitleDesc();
+                    mSelectedSort = R.id.title_desc_radio;
+            }
+        });
+
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.setCancelable(true);
+        dialogBuilder.show();
     }
 }

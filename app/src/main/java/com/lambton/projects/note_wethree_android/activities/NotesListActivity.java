@@ -6,15 +6,18 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -54,6 +57,7 @@ public class NotesListActivity extends AppCompatActivity
     private List<Note> mNoteList;
     private NoteHelperRepository mNoteHelperRepository;
     private List<Note> mNotesToMove;
+    private int mSelectedSort = R.id.title_asc_radio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -223,22 +227,21 @@ public class NotesListActivity extends AppCompatActivity
         }
     }
 
-    private SearchView.OnQueryTextListener mOnQueryTextListener  = new SearchView.OnQueryTextListener()
+    private SearchView.OnQueryTextListener mOnQueryTextListener = new SearchView.OnQueryTextListener()
     {
         @Override
         public boolean onQueryTextSubmit(String query)
         {
-            if(query.isEmpty())
+            if (query.isEmpty())
             {
                 getNotes();
                 mNotesAdapter.setNewData(mNoteList);
-            }
-            else
+            } else
             {
                 List<Note> notes = new ArrayList<>();
-                for(Note note: mNoteList)
+                for (Note note : mNoteList)
                 {
-                    if(note.getNoteTitle().contains(query) || note.getNoteDescription().contains(query))
+                    if (note.getNoteTitle().contains(query) || note.getNoteDescription().contains(query))
                     {
                         notes.add(note);
                     }
@@ -255,17 +258,16 @@ public class NotesListActivity extends AppCompatActivity
             try
             {
                 List<Note> notes = new ArrayList<>();
-                for(Note note: mNoteList)
+                for (Note note : mNoteList)
                 {
-                    if(note.getNoteTitle().contains(newText) || note.getNoteDescription().contains(newText))
+                    if (note.getNoteTitle().contains(newText) || note.getNoteDescription().contains(newText))
                     {
                         notes.add(note);
                     }
                 }
                 mNotesAdapter.setNewData(notes);
                 mNotesAdapter.notifyDataSetChanged();
-            }
-            catch (Exception e)
+            } catch (Exception e)
             {
                 e.printStackTrace();
             }
@@ -285,4 +287,72 @@ public class NotesListActivity extends AppCompatActivity
             return false;
         }
     };
+
+    public void sortClicked(View view)
+    {
+        showSortAlert();
+    }
+
+    private void sortTitleAsc()
+    {
+        mNoteList.sort((o1, o2) -> o1.getNoteTitle().compareTo(o2.getNoteTitle()));
+        mNotesAdapter.setNewData(mNoteList);
+        mNotesAdapter.notifyDataSetChanged();
+    }
+
+    private void sortTitleDesc()
+    {
+        mNoteList.sort((o1, o2) -> -o1.getNoteTitle().compareTo(o2.getNoteTitle()));
+        mNotesAdapter.setNewData(mNoteList);
+        mNotesAdapter.notifyDataSetChanged();
+    }
+
+    private void sortCreatedAsc()
+    {
+        mNoteList.sort((o1, o2) -> o1.getNoteCreatedDate().compareTo(o2.getNoteCreatedDate()));
+        mNotesAdapter.setNewData(mNoteList);
+        mNotesAdapter.notifyDataSetChanged();
+    }
+
+    private void sortCreatedDesc()
+    {
+        mNoteList.sort((o1, o2) -> -o1.getNoteCreatedDate().compareTo(o2.getNoteCreatedDate()));
+        mNotesAdapter.setNewData(mNoteList);
+        mNotesAdapter.notifyDataSetChanged();
+    }
+
+    private void showSortAlert()
+    {
+        final AlertDialog dialogBuilder = new AlertDialog.Builder(this).create();
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.custom_dialog_note_sort, null);
+
+        RadioGroup group = dialogView.findViewById(R.id.radio_group);
+        group.check(mSelectedSort);
+        group.setOnCheckedChangeListener((group1, checkedId) ->
+        {
+            switch (checkedId)
+            {
+                case R.id.title_asc_radio:
+                    sortTitleAsc();
+                    mSelectedSort = R.id.title_asc_radio;
+                    break;
+                case R.id.title_desc_radio:
+                    sortTitleDesc();
+                    mSelectedSort = R.id.title_desc_radio;
+                    break;
+                case R.id.created_asc_radio:
+                    sortCreatedAsc();
+                    mSelectedSort = R.id.created_asc_radio;
+                    break;
+                case R.id.created_desc_radio:
+                    sortCreatedDesc();
+                    mSelectedSort = R.id.created_desc_radio;
+            }
+        });
+
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.setCancelable(true);
+        dialogBuilder.show();
+    }
 }

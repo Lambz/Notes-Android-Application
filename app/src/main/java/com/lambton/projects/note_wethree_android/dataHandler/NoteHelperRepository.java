@@ -49,7 +49,7 @@ public class NoteHelperRepository {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void insertNewNoteInDatabase(Note note) {
-        if(note != null) {
+        if(note == null) {
             Log.i("Note insertion error!","Trying to set null value");
         }
         else {
