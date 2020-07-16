@@ -24,6 +24,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:onClick="navigateClicked"
             android:background="@drawable/ic_baseline_navigation_24" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

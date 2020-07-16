@@ -14,7 +14,13 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -24,6 +30,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.lambton.projects.note_wethree_android.R;
 import com.lambton.projects.note_wethree_android.Utils;
+import com.lambton.projects.note_wethree_android.volley.GetByVolley;
+import com.lambton.projects.note_wethree_android.volley.VolleySingleton;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -35,6 +45,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private double mLat, mLng;
     private LocationManager mLocationManager;
+    private Location mUserLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -132,10 +143,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void enableUserLocationAndZoom()
     {
         mMap.setMyLocationEnabled(true);
-        Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (location != null)
+        mUserLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (mUserLocation != null)
         {
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), DEFAULT_ZOOM_LEVEL));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mUserLocation.getLatitude(), mUserLocation.getLongitude()), DEFAULT_ZOOM_LEVEL));
         }
     }
 
@@ -158,5 +169,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    public void navigateClicked(View view)
+    {
+        LatLng latLng = new LatLng(mLat,mLng);
+        Location location = new Location("");
+        location.setLongitude(mLng);
+        location.setLatitude(mLat);
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getDirectionURL(latLng), null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                GetByVolley.getDirection(response,mMap,location);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+//                Log.d(TAG," onErrorResponse: "+error);
+            }
+        });
+        VolleySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+    }
+
+    private String getDirectionURL(LatLng latLng) {
+        StringBuilder URL = new StringBuilder("https://maps.googleapis.com/maps/api/directions/json?");
+        URL.append("origin="+mUserLocation.getLatitude() + ","+ mUserLocation.getLongitude());
+        URL.append("&destination="+latLng.latitude+","+latLng.longitude);
+        URL.append("&key="+getString(R.string.google_maps_key));
+        System.out.println(URL);
+        return URL.toString();
     }
 }
