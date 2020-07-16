@@ -27,9 +27,12 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.lambton.projects.note_wethree_android.R;
 import com.lambton.projects.note_wethree_android.Utils;
 import com.lambton.projects.note_wethree_android.volley.GetByVolley;
@@ -39,7 +42,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnPolylineClickListener
 {
     private static final int REQUEST_CODE = 1;
     private static final float DEFAULT_ZOOM_LEVEL = 10.0f;
@@ -51,6 +54,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ToggleButton mToggleButton;
     private String mMode = "Driving";
     private int mStrokeColor = Color.RED;
+    private String [] mInfo = null;
+    private Marker mInfoMarker = null;
+    private String mTitle, mSnippet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -98,6 +104,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap)
     {
         mMap = googleMap;
+        mMap.setOnPolylineClickListener(this);
         setDestination();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
@@ -173,6 +180,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 {
                     marker.setTitle(info[0]);
                     marker.setSnippet(info[1]);
+                    mTitle = info[0];
+                    mSnippet = info[1];
                 });
             } catch (IOException e)
             {
@@ -191,7 +200,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getDirectionURL(latLng), null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                GetByVolley.getDirection(response,mMap,location,mStrokeColor);
+                mInfo = GetByVolley.getDirection(response,mMap,location,mStrokeColor, mTitle, mSnippet);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -223,6 +232,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         {
             mStrokeColor = Color.RED;
             mMode = "Driving";
+        }
+    }
+
+    @Override
+    public void onPolylineClick(Polyline polyline)
+    {
+        if(mInfo != null)
+        {
+            if(mInfoMarker != null)
+            {
+                mInfoMarker.remove();
+                mInfoMarker = null;
+            }
+            LatLng place1 = polyline.getPoints().get(0);
+            LatLng place2 = polyline.getPoints().get(1);
+            double lat = (place1.latitude + place2.latitude)/2;
+            double lng = (place1.longitude + place2.longitude)/2;
+            BitmapDescriptor transparent = BitmapDescriptorFactory.fromResource(R.mipmap.transparent);
+            MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(lat,lng)).title("Distance: "+mInfo[0]).snippet("Duration: "+mInfo[1]).icon(transparent);
+            mInfoMarker = mMap.addMarker(markerOptions);
+            mInfoMarker.showInfoWindow();
         }
     }
 }

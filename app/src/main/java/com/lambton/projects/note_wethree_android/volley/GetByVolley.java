@@ -1,6 +1,5 @@
 package com.lambton.projects.note_wethree_android.volley;
 
-import android.graphics.Color;
 import android.location.Location;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -17,7 +16,7 @@ import java.util.List;
 
 public class GetByVolley {
 
-    public static void getDirection(JSONObject jsonObject, GoogleMap googleMap, Location location, int strokeColor)
+    public static String[] getDirection(JSONObject jsonObject, GoogleMap googleMap, Location location, int strokeColor, String title, String snippet)
     {
         HashMap<String, String> distances = null;
         VolleyParser directionParser = new VolleyParser();
@@ -25,23 +24,23 @@ public class GetByVolley {
         String distance = distances.get("distance");
         String duration = distances.get("duration");
         String [] directionsList = directionParser.parseDirections(jsonObject);
-        displayDirections(directionsList, distance, duration, googleMap, location, strokeColor);
+        displayDirections(directionsList, distance, duration, googleMap, location, strokeColor, title, snippet);
+        return new String[] {distance,duration};
     }
 
-    private static void displayDirections(String[] directionsList, String distance, String duration, GoogleMap googleMap, Location location, int strokeColor) {
+    private static void displayDirections(String[] directionsList, String distance, String duration, GoogleMap googleMap, Location location, int strokeColor, String title, String snippet) {
         googleMap.clear();
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         MarkerOptions options = new MarkerOptions().position(latLng)
-                .title("Duration: "+ duration)
-                .snippet("Distance: "+distance)
-                .draggable(true);
+                .title(title)
+                .snippet(snippet);
         googleMap.addMarker(options);
         for(String direction: directionsList)
         {
             PolylineOptions polylineOptions = new PolylineOptions()
                     .color(strokeColor)
                     .width(10)
-                    .addAll(PolyUtil.decode(direction));
+                    .addAll(PolyUtil.decode(direction)).clickable(true);
             googleMap.addPolyline(polylineOptions);
         }
     }
