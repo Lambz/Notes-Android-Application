@@ -26,6 +26,10 @@ public class Utils
             return;
         }
         Field[] fields = o.getClass().getDeclaredFields();
+        if(fields.length == 0)
+        {
+            System.out.println("No fields");
+        }
         for (int i=0; i<fields.length; i++)
         {
             try

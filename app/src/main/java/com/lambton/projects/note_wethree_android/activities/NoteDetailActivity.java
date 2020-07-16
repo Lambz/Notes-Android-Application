@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -35,6 +36,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.loader.content.CursorLoader;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.lambton.projects.note_wethree_android.R;
@@ -44,7 +46,9 @@ import com.lambton.projects.note_wethree_android.dataHandler.entity.Category;
 import com.lambton.projects.note_wethree_android.dataHandler.entity.Note;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -59,6 +63,7 @@ public class NoteDetailActivity extends AppCompatActivity
     private static final int CAMERA_PERM_CODE = 101;
     private static final long VIBRATION_PERIOD = 500;
     private static final int MOVE_TO_CATEGORY_REQUEST = 1234;
+    private static final int GET_AUDIO_REQUEST_CODE = 9876;
 
     private EditText mTitleEditText;
     private EditText mDescriptionEditText;
@@ -285,7 +290,7 @@ public class NoteDetailActivity extends AppCompatActivity
                 mImageView.setImageBitmap(bitmap);
             }
         }
-        if (requestCode == GALLERY_REQUEST_CODE)
+        else if (requestCode == GALLERY_REQUEST_CODE)
         {
             if (resultCode == RESULT_OK && data != null && data.getData() != null)
             {
@@ -294,6 +299,16 @@ public class NoteDetailActivity extends AppCompatActivity
                 Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
                 mSelectedImage = bitmap;
                 mImageView.setImageBitmap(bitmap);
+            }
+        }
+        else if(requestCode == GET_AUDIO_REQUEST_CODE)
+        {
+            if(resultCode == RESULT_OK){
+
+                Uri uri = data.getData();
+                mIsRecorded = true;
+                mRecordedAudio = uri.toString();
+                mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_play_arrow_24));
             }
         }
     }
@@ -314,6 +329,13 @@ public class NoteDetailActivity extends AppCompatActivity
         if(mIsRecorded)
         {
             showRemoveAudioAlert();
+        }
+        else
+        {
+            Intent intent_upload = new Intent();
+            intent_upload.setType("audio/*");
+            intent_upload.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(intent_upload,GET_AUDIO_REQUEST_CODE);
         }
         return false;
     };
@@ -340,7 +362,16 @@ public class NoteDetailActivity extends AppCompatActivity
                     mMediaPlayer.setOnCompletionListener(mp -> mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_play_arrow_24)));
                     try
                     {
-                        mMediaPlayer.setDataSource(mRecordedAudio);
+                        if(mRecordedAudio.substring(0,7).equals("content"))
+                        {
+                            Uri uri = Uri.parse(mRecordedAudio);
+                            System.out.println(uri.toString());
+                            mMediaPlayer.setDataSource(NoteDetailActivity.this,uri);
+                        }
+                        else
+                        {
+                            mMediaPlayer.setDataSource(mRecordedAudio);
+                        }
                         mMediaPlayer.prepare();
                         Toast.makeText(NoteDetailActivity.this, "Playing...", Toast.LENGTH_SHORT).show();
                         mMediaPlayer.start();
@@ -438,14 +469,10 @@ public class NoteDetailActivity extends AppCompatActivity
         finish();
     }
 
-    private ImageView.OnLongClickListener mImageViewOnLongClickListener = new View.OnLongClickListener()
+    private ImageView.OnLongClickListener mImageViewOnLongClickListener = v ->
     {
-        @Override
-        public boolean onLongClick(View v)
-        {
-            showDeleteImageAlert();
-            return false;
-        }
+        showDeleteImageAlert();
+        return false;
     };
 
     public void showDeleteImageAlert()
@@ -473,5 +500,16 @@ public class NoteDetailActivity extends AppCompatActivity
         intent.putExtra("lat",mNote.getNoteLatitude());
         intent.putExtra("long",mNote.getNoteLongitude());
         startActivity(intent);
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        if(mMediaPlayer != null && mMediaPlayer.isPlaying())
+        {
+            mMediaPlayer.stop();
+            mMediaPlayer.release();
+        }
     }
 }
