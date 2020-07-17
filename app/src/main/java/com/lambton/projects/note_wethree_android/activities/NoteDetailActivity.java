@@ -305,6 +305,7 @@ public class NoteDetailActivity extends AppCompatActivity
             {
 
                 Uri uri = data.getData();
+                System.out.println(uri.toString());
                 mIsRecorded = true;
                 try
                 {
@@ -319,7 +320,6 @@ public class NoteDetailActivity extends AppCompatActivity
                         outputStream.write(buffer);
                         mRecordedAudio = file.getAbsolutePath();
                         System.out.println(mRecordedAudio);
-//                        mRecordedAudio = uri.toString();
                         mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_play_arrow_24));
                     }
                 } catch (FileNotFoundException e)
@@ -382,7 +382,6 @@ public class NoteDetailActivity extends AppCompatActivity
                 if (mIsPlaying)
                 {
                     mMediaPlayer.stop();
-                    Toast.makeText(NoteDetailActivity.this, "Stop Playing...", Toast.LENGTH_SHORT).show();
                     mIsPlaying = false;
                     mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_play_arrow_24));
                 } else
@@ -393,7 +392,6 @@ public class NoteDetailActivity extends AppCompatActivity
                     {
                         mMediaPlayer.setDataSource(mRecordedAudio);
                         mMediaPlayer.prepare();
-                        Toast.makeText(NoteDetailActivity.this, "Playing...", Toast.LENGTH_SHORT).show();
                         mMediaPlayer.start();
                         mIsPlaying = true;
                         mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_pause_24));
@@ -407,7 +405,6 @@ public class NoteDetailActivity extends AppCompatActivity
                 if (mIsRecording)
                 {
                     mMediaRecorder.stop();
-                    Toast.makeText(NoteDetailActivity.this, "Stop Recording...", Toast.LENGTH_SHORT).show();
                     mIsRecorded = true;
                     mIsRecording = false;
                     mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_play_arrow_24));
@@ -418,7 +415,6 @@ public class NoteDetailActivity extends AppCompatActivity
                     try
                     {
                         mMediaRecorder.prepare();
-                        Toast.makeText(NoteDetailActivity.this, "Recording...", Toast.LENGTH_SHORT).show();
                         mMediaRecorder.start();
                         mAudioButton.setBackground(getDrawable(R.drawable.ic_baseline_mic_24));
                     } catch (IOException e)

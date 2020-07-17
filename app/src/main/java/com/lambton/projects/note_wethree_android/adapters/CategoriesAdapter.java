@@ -53,7 +53,12 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     {
         final Category category = mCategoryList.get(position);
         holder.mTitleTextView.setText(category.getCategoryName());
-        holder.mNumNotesTextView.setText(String.valueOf(mCategoryCount.get(category.getId())));
+        Integer num = mCategoryCount.get(category.getId());
+        if(num == null)
+        {
+            num = 0;
+        }
+        holder.mNumNotesTextView.setText(String.valueOf(num));
         holder.mConstraintLayout.setOnClickListener(v ->
         {
             Intent intent = new Intent(mContext, NotesListActivity.class);

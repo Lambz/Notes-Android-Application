@@ -127,10 +127,17 @@ public class CategoryListActivity extends AppCompatActivity
             Utils.showError("Invalid Category Name","Please enter a valid Category Name",this);
             return;
         }
+        for(Category category: mCategoryList)
+        {
+            if(category.getCategoryName().toLowerCase().equals(category_name.toLowerCase()))
+            {
+                Utils.showError("Category Name already exists","Please enter a different Category Name",this);
+                return;
+            }
+        }
         Category category = new Category(category_name);
         CategoryHelperRepository helperRepository = new CategoryHelperRepository(this.getApplication());
         helperRepository.insertNewCategoryInDatabase(category);
-//        getCategories();
         mCategoryList.add(category);
         mCategoriesAdapter.setNewData(mCategoryList);
         mCategoriesAdapter.notifyDataSetChanged();

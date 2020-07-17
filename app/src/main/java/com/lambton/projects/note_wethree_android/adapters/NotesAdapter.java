@@ -66,12 +66,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>
         }
         if (note.getNoteImageAsBitmap() != null)
         {
-            holder.mImageView.setVisibility(View.VISIBLE);
             holder.mImageView.setImageBitmap(note.getNoteImageAsBitmap());
         } else
         {
-            System.out.println("found null image for: "+note.getNoteTitle());
-            holder.mImageView.setVisibility(View.GONE);
+            holder.mImageView.setImageResource(R.drawable.ic_baseline_note_24);
         }
         holder.mConstraintLayout.setOnClickListener(v ->
         {
