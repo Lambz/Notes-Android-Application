@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">note_WeThree_android</string>
+    <string name="app_name">Notes</string>
     <string name="label_report">Enter Category Name</string>
     <string name="label_type_your_comment">Category Name</string>
     <string name="label_submit">Add</string>
